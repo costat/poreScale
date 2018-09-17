@@ -19,4 +19,3 @@ Publications making use of poreScale should cite this software package. An examp
 ### Contributors ###
  
 - Timothy B. Costa
--
