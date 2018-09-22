@@ -1,13 +1,15 @@
 /**
  * \file
  * \author Timothy B. Costa
- * \brief poreScale definitions
+ * \brief poreScale general definitions
  */
 
 #ifndef _PORESCALE_DEFINE_H_
 #define _PORESCALE_DEFINE_H_
 
 #include <cstdint>
+#include <cstddef>
+#include "math.h"
 
 #define MASTER_NODE 0
 #define PORESCALE_COMM MPI_COMM_WORLD

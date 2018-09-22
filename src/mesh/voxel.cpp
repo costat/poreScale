@@ -38,7 +38,7 @@ porescale::voxel<T>::checkSanity(void)
 
   if (this->par_->dimension() == 3) goto checkSanity3;
 
-checkSanity3:
+  checkSanity3:
   {
     nChanged = 0;
     for (psInt_t zi = 0; zi < nz; zi++) {
@@ -116,7 +116,7 @@ checkSanity3:
     else goto cleanup;
   }
 
-checkSanity2:
+  checkSanity2:
   {
     nChanged = 0;
     for (psInt_t yi = 0; yi < ny; yi++) {
@@ -172,7 +172,7 @@ checkSanity2:
     else goto cleanup;
   }
 
-cleanup:
+  cleanup:
   if (totalChanged) {
     std::cout << "\nWarning, input geometry was not sane.\n";
     std::cout << totalChanged << " cells, representing ";
@@ -200,6 +200,11 @@ template <typename T>
 psErr_t
 porescale::voxel<T>::build2d_(void)
 {
+  T dx = (T)this->par_->length();
+  T dy = (T)this->par_->width();
+
+  
+
   return PORESCALE_UNSUCCESSFUL;
 }
 
