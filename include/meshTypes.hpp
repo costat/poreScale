@@ -37,6 +37,7 @@ public:
   psErr_t init( vertex<T>* v1, vertex<T>* v2 );
 
   vertex<T>* vertices( psInt_t idx );
+  T length(void) const;
 
 private:
 
@@ -51,6 +52,37 @@ private:
 template <typename T>
 class face
 {
+
+public:
+
+  face();
+  face( edge<T>* e1, edge<T>* e2, edge<T>* e3, ... );
+
+  ~face();
+
+  psErr_t init( edge<T>* e1, edge<T>* e2, edge<T>* e3, ... );
+
+  vertex<T>*  vertices( psInt_t idx );
+  edge<T>*    edges( psInt_t idx );
+
+  psInt_t     nVertices(void) const;
+  psInt_t     nEdges(void) const;
+
+  T           length(void) const;
+  T           width(void) const;
+
+private:
+
+  psErr_t computeLength_(void);
+  psErr_t computeWidth_(void);
+
+  vertex<T>** vertices_;
+  edge<T>**   edges_;
+  T           length_;
+  T           width_;
+
+  psInt_t     nEdges_;
+  psInt_t     nVertices_;
 
 };
 
