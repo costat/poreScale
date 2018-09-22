@@ -158,3 +158,6 @@ T porescale::face<T>::width(void) const { return width_; }
 //--- Private member functions ---//
 
 
+//--- Explicit type instantiations ---//
+template class porescale::face<float>;
+template class porescale::face<double>;
