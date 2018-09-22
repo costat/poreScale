@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <cstdarg>
 #include "math.h"
 
 #define MASTER_NODE 0
