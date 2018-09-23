@@ -56,11 +56,11 @@ class face
 public:
 
   face();
-  face( edge<T>* e1, edge<T>* e2, edge<T>* e3, ... );
+  face( psInt_t nEdges, edge<T>* e1,  ... );
 
   ~face();
 
-  psErr_t init( edge<T>* e1, edge<T>* e2, edge<T>* e3, ... );
+  psErr_t init( psInt_t nEdges, edge<T>* e1,  ... );
 
   vertex<T>*  vertices( psInt_t idx );
   edge<T>*    edges( psInt_t idx );

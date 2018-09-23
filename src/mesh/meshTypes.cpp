@@ -87,18 +87,49 @@ porescale::face<T>::face() : vertices_(NULL), edges_(NULL),
 
 template <typename T>
 porescale::face<T>::face( 
+    psInt_t             nEdges,
     porescale::edge<T>* e1, 
-    porescale::edge<T>* e2, 
-    porescale::edge<T>* e3, 
     ...
 )
 {
 
-    // Get edge count
+    // Set edges 
+    nEdges_ = nEdges;
+    edges_ = new edge<T>*[nEdges];
 
-    // Set edges, nEdges and nVertices
+    va_list argPtr;
+    va_start( argPtr, e1 );
+
+    edges_[0] = e1;
+    for (int i = 1; i < nEdges; i++) {
+        edges_[i] = va_arg( argPtr, porescale::edge<T>* );
+    }
+    va_end( argPtr );
 
     // Find unique nodes and set vertices
+    std::unordered_set< porescale::vertex<T>* > uset;
+
+    uset.insert( edges_[0]->vertices(0) );
+    uset.insert( edges_[0]->vertices(1) );
+
+    nVertices_ = 2;
+
+    for (int i = 1; i < nEdges; i++) {
+        for (int j = 0; j < 2; j++ ) {
+            if (uset.find( edges_[i]->vertices(j) ) == uset.end()) {
+                uset.insert( edges_[i]->vertices(j) );
+                nVertices_++;
+            }
+        }
+    }
+
+    vertices_ = new porescale::vertex<T>*[nVertices_];
+
+    psInt_t idx = 0;
+    for (const auto& elem: uset) {
+        vertices_[idx] = elem;
+        idx++;
+    }
 
     // Compute dimensions
 
@@ -108,18 +139,49 @@ porescale::face<T>::face(
 template <typename T>
 psErr_t
 porescale::face<T>::init(
+    psInt_t             nEdges,
     porescale::edge<T>* e1, 
-    porescale::edge<T>* e2, 
-    porescale::edge<T>* e3, 
     ...
 )
 {
 
-    // Get edge count
+    // Set edges 
+    nEdges_ = nEdges;
+    edges_ = new edge<T>*[nEdges];
 
-    // Set edges
+    va_list argPtr;
+    va_start( argPtr, e1 );
+
+    edges_[0] = e1;
+    for (int i = 1; i < nEdges; i++) {
+        edges_[i] = va_arg( argPtr, porescale::edge<T>* );
+    }
+    va_end( argPtr );
 
     // Find unique nodes and set vertices
+    std::unordered_set< porescale::vertex<T>* > uset;
+
+    uset.insert( edges_[0]->vertices(0) );
+    uset.insert( edges_[0]->vertices(1) );
+
+    nVertices_ = 2;
+
+    for (int i = 1; i < nEdges; i++) {
+        for (int j = 0; j < 2; j++ ) {
+            if (uset.find( edges_[i]->vertices(j) ) == uset.end()) {
+                uset.insert( edges_[i]->vertices(j) );
+                nVertices_++;
+            }
+        }
+    }
+
+    vertices_ = new porescale::vertex<T>*[nVertices_];
+
+    psInt_t idx = 0;
+    for (const auto& elem: uset) {
+        vertices_[idx] = elem;
+        idx++;
+    }
 
     // Compute dimensions
 
@@ -156,7 +218,6 @@ template <typename T>
 T porescale::face<T>::width(void) const { return width_; }
 
 //--- Private member functions ---//
-
 
 //--- Explicit type instantiations ---//
 template class porescale::face<float>;
