@@ -114,8 +114,9 @@ porescale::face<T>::face(
     psErr_t err;
 
     err = init_( edgesTmp );
-    err = computeArea_();
+    assert( err == PORESCALE_SUCCESSFUL );
 
+    err = computeArea_();
     assert( err == PORESCALE_SUCCESSFUL );
 
 }
