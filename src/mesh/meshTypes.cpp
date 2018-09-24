@@ -232,8 +232,7 @@ psErr_t porescale::face<T>::init_( edge<T>** edgesTmp )
     }
 
     // Sanity check, ensure a closed face was established via ordering
-    if (edges_[0]->vertices(0) == edges_[nEdges_-1]->vertices(1)) return PORESCALE_SUCCESSFUL;
-    else return PORESCALE_UNSUCCESSFUL;
+    return PORESCALE_UNSUCCESSFUL;
 
 }
 
