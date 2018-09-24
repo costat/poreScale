@@ -83,7 +83,7 @@ template class porescale::edge<double>;
 //--- Constructors and Destructors ---//
 template <typename T>
 porescale::face<T>::face() : vertices_(NULL), edges_(NULL), 
-                             length_(0.0), width_(0.0), nEdges_(0), nVertices_(0) { }
+                             area_(0.0), nEdges_(0), nVertices_(0) { }
 
 template <typename T>
 porescale::face<T>::face( 
@@ -93,45 +93,30 @@ porescale::face<T>::face(
 )
 {
 
-    // Set edges 
+    // Current support limited to triangular and quadrilateral type cells
+    assert( nEdges == 3 || nEdges == 4);
+
+    // Set edges
     nEdges_ = nEdges;
     edges_ = new edge<T>*[nEdges];
+
+    edge<T>** edgesTmp = new edge<T>*[nEdges];
 
     va_list argPtr;
     va_start( argPtr, e1 );
 
-    edges_[0] = e1;
+    edgesTmp[0] = e1;
     for (int i = 1; i < nEdges; i++) {
-        edges_[i] = va_arg( argPtr, porescale::edge<T>* );
+        edgesTmp[i] = va_arg( argPtr, porescale::edge<T>* );
     }
     va_end( argPtr );
 
-    // Find unique nodes and set vertices
-    std::unordered_set< porescale::vertex<T>* > uset;
+    psErr_t err;
 
-    uset.insert( edges_[0]->vertices(0) );
-    uset.insert( edges_[0]->vertices(1) );
+    err = init_( edgesTmp );
+    err = computeArea_();
 
-    nVertices_ = 2;
-
-    for (int i = 1; i < nEdges; i++) {
-        for (int j = 0; j < 2; j++ ) {
-            if (uset.find( edges_[i]->vertices(j) ) == uset.end()) {
-                uset.insert( edges_[i]->vertices(j) );
-                nVertices_++;
-            }
-        }
-    }
-
-    vertices_ = new porescale::vertex<T>*[nVertices_];
-
-    psInt_t idx = 0;
-    for (const auto& elem: uset) {
-        vertices_[idx] = elem;
-        idx++;
-    }
-
-    // Compute dimensions
+    assert( err == PORESCALE_SUCCESSFUL );
 
 }
 
@@ -145,46 +130,32 @@ porescale::face<T>::init(
 )
 {
 
-    // Set edges 
+    // Current support limited to triangular and quadrilateral type cells
+    assert( nEdges == 3 || nEdges == 4);
+
+    // Set edges
     nEdges_ = nEdges;
     edges_ = new edge<T>*[nEdges];
+
+    edge<T>** edgesTmp = new edge<T>*[nEdges];
 
     va_list argPtr;
     va_start( argPtr, e1 );
 
-    edges_[0] = e1;
+    edgesTmp[0] = e1;
     for (int i = 1; i < nEdges; i++) {
-        edges_[i] = va_arg( argPtr, porescale::edge<T>* );
+        edgesTmp[i] = va_arg( argPtr, porescale::edge<T>* );
     }
     va_end( argPtr );
 
-    // Find unique nodes and set vertices
-    std::unordered_set< porescale::vertex<T>* > uset;
+    psErr_t err;
 
-    uset.insert( edges_[0]->vertices(0) );
-    uset.insert( edges_[0]->vertices(1) );
+    err = init_( edgesTmp );
+    if (err) return PORESCALE_UNSUCCESSFUL;
 
-    nVertices_ = 2;
-
-    for (int i = 1; i < nEdges; i++) {
-        for (int j = 0; j < 2; j++ ) {
-            if (uset.find( edges_[i]->vertices(j) ) == uset.end()) {
-                uset.insert( edges_[i]->vertices(j) );
-                nVertices_++;
-            }
-        }
-    }
-
-    vertices_ = new porescale::vertex<T>*[nVertices_];
-
-    psInt_t idx = 0;
-    for (const auto& elem: uset) {
-        vertices_[idx] = elem;
-        idx++;
-    }
-
-    // Compute dimensions
-
+    err = computeArea_();
+    if (err) return PORESCALE_UNSUCCESSFUL;
+    else return PORESCALE_SUCCESSFUL;
 }
 
 template <typename T>
@@ -212,12 +183,93 @@ template <typename T>
 psInt_t porescale::face<T>::nEdges(void) const { return nEdges_; }
 
 template <typename T>
-T porescale::face<T>::length(void) const { return length_; }
-
-template <typename T>
-T porescale::face<T>::width(void) const { return width_; }
+T porescale::face<T>::area(void) const { return area_; }
 
 //--- Private member functions ---//
+template <typename T>
+psErr_t porescale::face<T>::init_( edge<T>** edgesTmp )
+{
+
+    std::unordered_set< psInt_t > placed;
+
+    edges_[0] = edgesTmp[0];
+    vertices_[0] = edges_[0]->vertices(0);
+    vertices_[1] = edges_[0]->vertices(1);
+
+    psInt_t done;
+
+    // i tracks idx of edges_ array
+    for (int i = 1; i < nEdges_; i++)
+    {
+        done = 0;
+        // j tracks idx of edgesTmp array
+        for (int j = 1; j < nEdges_; j++)
+        {
+            // is this a candidate
+            if (placed.find(j) == placed.end()) 
+            {
+                if (edgesTmp[j]->vertices(0) == edges_[i-1]->vertices(1))
+                {
+                    // log that we've used this edge
+                    placed.insert(j);
+                    edges_[i] = edgesTmp[j];
+                    vertices_[i+1] = edgesTmp[j]->vertices(1);
+                    done = 1;
+                }
+                else if (edgesTmp[j]->vertices(1) == edges_[i-1]->vertices(1))
+                {
+                    // log that we've used this edge
+                    placed.insert(j);
+                    edges_[i] = edgesTmp[j];
+                    vertices_[i+1] = edges_[i]->vertices(0);
+                    done = 1;
+                }
+
+            }
+            if (done) break;
+        }
+    }
+
+    // Sanity check, ensure a closed face was established via ordering
+    if (edges_[0]->vertices(0) == edges_[nEdges_-1]->vertices(1)) return PORESCALE_SUCCESSFUL;
+    else return PORESCALE_UNSUCCESSFUL;
+
+}
+
+template <typename T>
+psErr_t
+porescale::face<T>::computeArea_(void)
+{
+
+    if (nEdges_ == 3) {
+
+    }
+    else if (nEdges_ == 4) {
+
+        // Find two non-adjacent vertices
+        porescale::vertex<T> *A, *C;
+        porescale::edge<T> *a, *b, *c, *d;
+
+        a = edges_[0];
+        b = edges_[1];
+        c = edges_[2];
+        d = edges_[3];
+
+        A = a->vertices(0);
+        C = c->vertices(0);
+
+        // Compute angles
+        T sinA, sinC;
+
+        // Compute area
+
+
+
+    }
+
+    // Return unsuccessful until function is finished 
+    return PORESCALE_UNSUCCESSFUL;
+}
 
 //--- Explicit type instantiations ---//
 template class porescale::face<float>;

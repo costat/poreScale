@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <cstdarg>
 #include <unordered_set>
+#include <cassert>
 #include "math.h"
 
 #define MASTER_NODE 0

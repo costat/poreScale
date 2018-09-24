@@ -68,18 +68,16 @@ public:
   psInt_t     nVertices(void) const;
   psInt_t     nEdges(void) const;
 
-  T           length(void) const;
-  T           width(void) const;
+  T           area(void) const;
 
 private:
 
-  psErr_t computeLength_(void);
-  psErr_t computeWidth_(void);
+  psErr_t init_( edge<T>** edgesTmp );
+  psErr_t computeArea_(void);
 
   vertex<T>** vertices_;
   edge<T>**   edges_;
-  T           length_;
-  T           width_;
+  T           area_;
 
   psInt_t     nEdges_;
   psInt_t     nVertices_;
