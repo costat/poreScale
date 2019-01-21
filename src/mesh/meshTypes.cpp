@@ -256,11 +256,10 @@ porescale::face<T>::computeArea_(void)
         c = edges_[2];
         d = edges_[3];
 
-        A = a->vertices(0);
-        C = c->vertices(0);
+        A = vertices(0);
+        C = vertices(2);
 
         // Compute angles
-        T sinA, sinC;
 
         // Compute area
 

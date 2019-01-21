@@ -10,6 +10,7 @@
 namespace porescale
 {
 
+#ifdef _OLD_MESH_TYPES_                                 // Old structs used for mesh in HGF. Replaced in meshTypes.{c/h}pp.
 /** \brief Mesh vertex struct
  *
  */
@@ -63,12 +64,13 @@ template <typename T>
 struct degreeOfFreedom
 {
   psInt_t doftype;                                    /**< In specifiying the type of degree of freedom: 0 for interior, 1 for edge, 2 for face. */
-  T        coords[3];                                  /**< Array of coordinates of the degree of freedom. coords[0] gives the x coordinate, coords[1] gives the y coordinate, and coords[2] gives the z coordinate. */
+  T       coords[3];                                  /**< Array of coordinates of the degree of freedom. coords[0] gives the x coordinate, coords[1] gives the y coordinate, and coords[2] gives the z coordinate. */
   psInt_t cell_numbers[2];                            /**< Array of mesh cell numbers containing the degree of freedom. */
   psInt_t neighbors[6];                               /**< Array listing the global number of neighboring degrees of freedom, i.e. DOFs which interact with this DOF in the model. */
 };
+#endif
 
-/** \brief Struct for coordinate sparse data format.
+/** \brief Struct for coordinate sparse data format sorting.
  *
  */
 template <typename T>
