@@ -17,7 +17,7 @@
 #define MASTER_NODE 0
 #define PORESCALE_COMM MPI_COMM_WORLD
 
-#if defined(__PORESCALE__INT8__)
+#if defined(__PORESCALE_INT8__)
 
 typedef int8_t			psInt_t;
 typedef uint8_t			smootxUInt_t;
