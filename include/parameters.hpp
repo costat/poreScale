@@ -13,8 +13,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "parmetis.h"
-
 #include "define.hpp"
 
 namespace porescale

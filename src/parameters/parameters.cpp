@@ -5,6 +5,7 @@
  */
 
 #include "parameters.hpp"
+#include "parmetis.h"
 
 //--- Constructors ---//
 template <typename T>
