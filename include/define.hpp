@@ -20,7 +20,7 @@
 #if defined(__PORESCALE_INT8__)
 
 typedef int8_t			psInt_t;
-typedef uint8_t			smootxUInt_t;
+typedef uint8_t			psUInt_t;
 #define	PORESCALE_INTMAX	INT8_MAX
 #define PORESCALE_UINTMAX	UINT8_MAX
 #define	PORESCALE_INTMIN	INT8_MIN
@@ -45,7 +45,7 @@ typedef uint64_t		psUInt_t;
 
 /** \brief psInt_t default definition. */
 typedef int32_t			psInt_t;
-/** \brief smootxUInt_t default definition. */
+/** \brief psUInt_t default definition. */
 typedef uint32_t		psUInt_t;
 /** \brief Maximum integer size. */
 #define	PORESCALE_INTMAX	INT32_MAX
@@ -62,7 +62,7 @@ typedef uint8_t			psUInt8_t;
 #define PORESCALE_UINT8MAX	UINT8_MAX
 #define	PORESCALE_INT8MIN	INT8_MIN
 
-/** \brief SmoothX error codes. */
+/** \brief poreScale error codes. */
 typedef enum
 {
 	PORESCALE_SUCCESSFUL   = 0,
