@@ -50,6 +50,69 @@ porescale::parameters<T>::init(
   return initParameters_(problemPath);
 }
 
+template <typename T>
+psInt_t
+porescale::parameters<T>::dimension(void) const { return dimension_; }
+
+template <typename T>
+T
+porescale::parameters<T>::length(void) const { return length_; }
+
+template <typename T>
+T
+porescale::parameters<T>::width(void) const { return width_; }
+
+template <typename T>
+T
+porescale::parameters<T>::height(void) const { return height_; }
+
+template <typename T>
+T
+porescale::parameters<T>::inflowMax(void) const { return inflowMax_; }
+
+template <typename T>
+psUInt8_t *
+porescale::parameters<T>::voxelGeometry(void) { return voxelGeometry_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::nx(void) const { return nx_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::ny(void) const { return ny_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::nz(void) const { return nz_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::solverMaxIterations(void) const { return solverMaxIterations_; }
+
+template <typename T>
+T
+porescale::parameters<T>::solverAbsoluteTolerance(void) const { return solverAbsoluteTolerance_; }
+
+template <typename T>
+T
+porescale::parameters<T>::solverRelativeTolerance(void) const { return solverRelativeTolerance_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::solverVerbose(void) const { return solverVerbose_; }
+
+template <typename T>
+std::string& 
+porescale::parameters<T>::problemPath(void) { return problemPath_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::nRanks(void) const { return nRanks_; }
+
+template <typename T>
+psInt_t
+porescale::parameters<T>::rank(void) const { return rank_; }
 
 template <typename T>
 void
@@ -291,7 +354,7 @@ porescale::parameters<T>::partitionVoxelGeometry_(void)
   MPI_Comm PM_Comm = PORESCALE_COMM;
 
   // partition
-  int err = ParMETIS_V3_PartKway( vtxdist, 
+/*  int err = ParMETIS_V3_PartKway( vtxdist, 
                                   xadj,
                                   adjncy,
                                   vwgt,
@@ -307,7 +370,7 @@ porescale::parameters<T>::partitionVoxelGeometry_(void)
                                   part,
                                  &PM_Comm
                                 );
-                            
+*/                            
   delete [] options;
 
   return PORESCALE_UNSUCCESSFUL;

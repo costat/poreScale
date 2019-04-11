@@ -16,7 +16,7 @@
 #define MASTER_RANK 0
 
 int
-main( int argc, char* argv[] )
+main( int argc, const char* argv[] )
 {
 
   // Init MPI
@@ -32,6 +32,8 @@ main( int argc, char* argv[] )
 
   begin = omp_get_wtime();
   //--- problem parameters ---//
+  std::string problemPath(argv[1]);
+  porescale::parameters<double> par( problemPath );
 
   para_time = omp_get_wtime() - begin;
   rebegin = omp_get_wtime();
@@ -43,6 +45,8 @@ main( int argc, char* argv[] )
 
   mesh_time = omp_get_wtime() - rebegin;
   rebegin = omp_get_wtime();
+  // print parameters 
+  par.printParameters(); 
 
   // save the mesh for visualization with paraview
 

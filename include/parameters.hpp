@@ -39,13 +39,13 @@ public:
   /** \brief Returns problem dimension. */
   psInt_t      dimension(void) const;
   /** \brief Returns length of the domain. */
-  T             length(void) const;
+  T            length(void) const;
   /** \brief Returns width of the domain. */
-  T             width(void) const;
+  T            width(void) const;
   /** \brief Returns height of the domain. */
-  T             height(void) const;
+  T            height(void) const;
   /** \brief Returns maximum inflow value. */
-  T             inflowMax(void) const;
+  T            inflowMax(void) const;
   /** \brief Returns pointer to voxelGeometry. */
   psUInt8_t *  voxelGeometry(void);
   /** \brief Returns x mesh dimension. */
@@ -57,13 +57,13 @@ public:
   /** \brief Returns max iterations allowed in iterative solvers. */
   psInt_t      solverMaxIterations(void) const;
   /** \brief Returns absolute tolerance for the iterative solver. */
-  T             solverAbsoluteTolerance(void) const;
+  T            solverAbsoluteTolerance(void) const;
   /** \brief Returns relative tolerance for the iterative solver. */
-  T             solverRelativeTolerance(void) const;
+  T            solverRelativeTolerance(void) const;
   /** \brief Returns verbose level for the iterative solver. */
   psInt_t      solverVerbose(void) const;
   /** \brief Returns reference to the problem path. */
-  std::string&  problemPath(void) const;
+  std::string& problemPath(void);
   /** \brief Returns number of global ranks. */
   psInt_t      nRanks(void) const;
   /** \brief Returns rank of current process. */
@@ -98,10 +98,10 @@ private:
 
   // Physical information
   psInt_t dimension_;                      /**< Specifies if the problem is 2d or 3d. */
-  T        length_;                         /**< Specifies the length of the domain (x-direction). */
-  T        width_;                          /**< Specifies the width of the domain (y-direction). */
-  T        height_;                         /**< Specifies the height of the domain (z-direction). */
-  T        inflowMax_;                      /**< Specifies the maximum inflow velocity. Defaults to 1 */
+  T       length_;                         /**< Specifies the length of the domain (x-direction). */
+  T       width_;                          /**< Specifies the width of the domain (y-direction). */
+  T       height_;                         /**< Specifies the height of the domain (z-direction). */
+  T       inflowMax_;                      /**< Specifies the maximum inflow velocity. Defaults to 1 */
 
   // Mesh information 
   psUInt_t  *  localGeometryIndex_;        /**< Vector storing indices of voxelGeometry belonging to current rank. */
@@ -112,15 +112,15 @@ private:
 
   // Solver controls
   psInt_t solverMaxIterations_;            /**< Specifies the maximum iterations allowed in iterative solvers. */
-  T        solverAbsoluteTolerance_;        /**< Specifies the absolute error tolerance for iterative solvers. */
-  T        solverRelativeTolerance_;        /**< Specifies the relative error tolerance for iterative solvers. */
+  T       solverAbsoluteTolerance_;        /**< Specifies the absolute error tolerance for iterative solvers. */
+  T       solverRelativeTolerance_;        /**< Specifies the relative error tolerance for iterative solvers. */
   psInt_t solverVerbose_;                  /**< Specifies the level of console output produced by iterative solvers. */
 
   // Save problem folder
-  std::string problemPath_;                 /**< Path to folder containing Geometry.dat and Parameters.dat input files. */
+  std::string problemPath_;                /**< Path to folder containing Geometry.dat and Parameters.dat input files. */
 
   // MPI information
-  psInt_t nRanks_; 				        /**< Number of MPI ranks. */
+  psInt_t nRanks_;   		           /**< Number of MPI ranks. */
   psInt_t rank_;                           /**< Current MPI rank. */
 };
 
