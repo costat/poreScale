@@ -1,0 +1,7 @@
+length= 8.0
+width= 2.0
+height= 0.0
+solverMaxIterations= 1000
+solverAbsoluteTolerance= 1e-8
+solverRelativeTolerance= 1e-6
+solverVerbose= 2
