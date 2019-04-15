@@ -8,7 +8,6 @@
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
-#include <omp.h>
 #include <mpi.h>
 
 #include "porescale.hpp"
@@ -30,28 +29,29 @@ main( int argc, const char* argv[] )
   //-- timers --//
   double begin, rebegin, para_time, mesh_time, build_time, solve_time, postp_time, total_time;
 
-  begin = omp_get_wtime();
+  begin = MPI_Wtime();
   //--- problem parameters ---//
   std::string problemPath(argv[1]);
   porescale::parameters<double> par( problemPath );
 
-  para_time = omp_get_wtime() - begin;
-  rebegin = omp_get_wtime();
+  para_time = MPI_Wtime() - begin;
+  rebegin = MPI_Wtime();
 
   //--- mesh ---//
   // check mesh sanity and remove dead pores
 
   // build the mesh
 
-  mesh_time = omp_get_wtime() - rebegin;
-  rebegin = omp_get_wtime();
+  mesh_time = MPI_Wtime() - rebegin;
+  rebegin = MPI_Wtime();
   // print parameters 
-  par.printParameters(); 
+  if (rank == MASTER_RANK) par.printParameters(); 
+  MPI_Barrier( MPI_COMM_WORLD );
 
   // save the mesh for visualization with paraview
 
-  postp_time = omp_get_wtime() - rebegin;
-  total_time = omp_get_wtime() - begin;
+  postp_time = MPI_Wtime() - rebegin;
+  total_time = MPI_Wtime() - begin;
 
   // print timings
   if (rank == MASTER_RANK) {
@@ -60,7 +60,7 @@ main( int argc, const char* argv[] )
     std::cout << "Mesh time: " << mesh_time << "\n";
     std::cout << "Post processessing time: " << postp_time << "\n";
     std::cout << "Total time: " << total_time << "\n";
-  }
+  } 
 
   MPI_Finalize();
 
