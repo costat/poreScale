@@ -11,8 +11,6 @@
 #include "define.hpp"
 #include "meshTypes.hpp"
 
-#include <omp.h>
-
 namespace porescale 
 {
 

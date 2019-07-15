@@ -5,7 +5,6 @@
  */
 
 #include "parameters.hpp"
-#include "parmetis.h"
 
 //--- Constructors ---//
 template <typename T>
@@ -154,10 +153,12 @@ porescale::parameters<T>::initParameters_(
   psErr_t err;
 
   err = loadParameters_(Parameters);
-  err = importVoxelGeometry_(Geometry);
+  // upon exit all ranks own a copy of the imported voxel geometry
+  err = importVoxelGeometry_(Geometry);   
 
   MPI_Barrier(PORESCALE_COMM);
 
+  // upon exit each rank knows index of its voxels
   err = partitionVoxelGeometry_();
 
   MPI_Barrier(PORESCALE_COMM);
@@ -329,51 +330,9 @@ psErr_t
 porescale::parameters<T>::partitionVoxelGeometry_(void)
 {
 
-  // parmetis flags
-  idx_t ncon        = 0;
-  idx_t nparts      = this->nRanks();
-  idx_t wgtflag     = 0;
-  idx_t numflag     = 0;
-  idx_t edgecut;
-
-  // parmetis arrays
-  idx_t   * vwgt    = NULL;                       // no weights
-  idx_t   * adjwgt  = NULL;                       // no weights
-  double  * tpwgts  = NULL;                       // no weights
-  double  * ubvec   = NULL;                       // no weights
-  idx_t   * options = new idx_t[3];
-  
-  options[0] = 0;
-
-  // create CSR graph representation of voxelGeometry_
-  idx_t * part;
-  idx_t * vtxdist;
-  idx_t * xadj;
-  idx_t * adjncy;
-
   // WIP  here //
 
-  MPI_Comm PM_Comm = PORESCALE_COMM;
-
   // partition
-/*  int err = ParMETIS_V3_PartKway( vtxdist, 
-                                  xadj,
-                                  adjncy,
-                                  vwgt,
-                                  adjwgt,
-                                 &wgtflag,
-                                 &numflag,
-                                 &ncon,
-                                 &nparts,
-                                  tpwgts,
-                                  ubvec,
-                                  options,
-                                 &edgecut,
-                                  part,
-                                 &PM_Comm
-                                );
-*/                            
-  delete [] options;
 
   return PORESCALE_UNSUCCESSFUL;
 }
