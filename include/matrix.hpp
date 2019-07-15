@@ -16,7 +16,27 @@ namespace porescale
 template <typename T>
 class matrix
 {
+public:
+    /** \brief Default constructor. */
 
+    /** \brief Construct from parameters. */
+
+    /** \brief Init from parameters. */
+
+    // Sets
+
+    // Gets
+
+protected:
+
+
+
+    psInt rank_;
+    psInt nRanks_; 
+
+    psInt globalRows_;
+    psInt localRows_;
+    psInt columns_;
 };
 
 /** \brief Sparse matrix derived class
@@ -25,6 +45,10 @@ class matrix
 template <typename T>
 class sparseMatrix : public matrix<T>
 {
+public:
+
+protected:
+    psSparseFormat sparseFormat_;
 
 };
 

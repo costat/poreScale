@@ -46,11 +46,11 @@ bool
 porescale::iterativeSolver<T>::checkResidual(void) const { return checkResidual_; } 
 
 template <typename T>
-psInt_t 
+psInt 
 porescale::iterativeSolver<T>::minIterations(void) const { return minIterations_; }
 
 template <typename T>
-psInt_t 
+psInt 
 porescale::iterativeSolver<T>::maxIterations(void) const { return maxIterations_; }
 
 template <typename T>
@@ -71,7 +71,7 @@ porescale::iterativeSolver<T>::currentResidual(void) const { return currentResid
 
 /** Sets */ 
 template <typename T>
-psErr_t 
+psErr 
 porescale::iterativeSolver<T>::setCheckResidual(bool checkRes) 
 { 
     checkResidual_ = checkRes; 
@@ -79,23 +79,23 @@ porescale::iterativeSolver<T>::setCheckResidual(bool checkRes)
 }
 
 template <typename T>
-psErr_t 
-porescale::iterativeSolver<T>::setMinIterations(psInt_t minIterations) 
+psErr 
+porescale::iterativeSolver<T>::setMinIterations(psInt minIterations) 
 { 
     minIterations_ = minIterations; 
     return PORESCALE_SUCCESSFUL; 
 }
 
 template <typename T>
-psErr_t 
-porescale::iterativeSolver<T>::setMaxIterations(psInt_t maxIterations) 
+psErr 
+porescale::iterativeSolver<T>::setMaxIterations(psInt maxIterations) 
 { 
     maxIterations_ = maxIterations; 
     return PORESCALE_SUCCESSFUL; 
 }
 
 template <typename T>
-psErr_t 
+psErr 
 porescale::iterativeSolver<T>::setRelativeTolerance(T relativeTolerance) 
 { 
     relativeTolerance_ = relativeTolerance; 
@@ -103,7 +103,7 @@ porescale::iterativeSolver<T>::setRelativeTolerance(T relativeTolerance)
 }
 
 template< typename T>
-psErr_t
+psErr
 porescale::iterativeSolver<T>::setAbsoluteTolerance(T absoluteTolerance) 
 { 
     absoluteTolerance_ = absoluteTolerance;

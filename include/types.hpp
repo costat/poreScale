@@ -76,8 +76,8 @@ struct degreeOfFreedom
 template <typename T>
 struct arrayCOO
 {
-  psInt_t i_index;                                    /**< In determining the row of the array entry. */
-  psInt_t j_index;                                    /**< In determining the column of the array entry. */
+  psInt i_index;                                    /**< In determining the row of the array entry. */
+  psInt j_index;                                    /**< In determining the column of the array entry. */
   T        value;                                      /**< Double precision value of the array entry. */
 };
 
@@ -87,7 +87,7 @@ struct arrayCOO
 template <typename T>
 struct boundaryNode
 {
-  psInt_t type;              /**< Boundary type. */
+  psInt type;              /**< Boundary type. */
   T        value;             /**< Boundary value. */
 };
 
@@ -99,6 +99,13 @@ enum PORESCALE_INFLOW
   PORESCALE_INFLOW_PARABOLIC,
   PORESCALE_INFLOW_CONSTANT
 };
+
+/** \brief Enum for sparse matrix types. */
+typedef enum
+{
+  COO,
+  CSR
+} psSparseFormat;
 
 }
 

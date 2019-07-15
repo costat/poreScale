@@ -22,10 +22,10 @@ namespace porescale
     solver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr_t init(parameters<T> * par) = 0;
+    virtual psErr init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual psErr_t build(void) = 0;
+    virtual psErr build(void) = 0;
 
   protected:
 
@@ -48,31 +48,31 @@ namespace porescale
     iterativeSolver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr_t init(parameters<T> * par) = 0;
+    virtual psErr init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual psErr_t build(void) = 0;
+    virtual psErr build(void) = 0;
 
     /** Gets */
     bool    checkResidual(void) const;
-    psInt_t minIterations(void) const;
-    psInt_t maxIterations(void) const;
+    psInt minIterations(void) const;
+    psInt maxIterations(void) const;
     T       relativeTolerance(void) const;
     T       absoluteTolerance(void) const;
     T       initialResidual(void) const;
     T       currentResidual(void) const;
 
     /** Sets */
-    psErr_t setCheckResidual(bool checkRes);
-    psErr_t setMinIterations(psInt_t minIterations);
-    psErr_t setMaxIterations(psInt_t maxIterations);
-    psErr_t setRelativeTolerance(T relativeTolerance);
-    psErr_t setAbsoluteTolerance(T absoluteTolerance);
+    psErr setCheckResidual(bool checkRes);
+    psErr setMinIterations(psInt minIterations);
+    psErr setMaxIterations(psInt maxIterations);
+    psErr setRelativeTolerance(T relativeTolerance);
+    psErr setAbsoluteTolerance(T absoluteTolerance);
 
   protected:
     bool    checkResidual_;
-    psInt_t minIterations_;
-    psInt_t maxIterations_;
+    psInt minIterations_;
+    psInt maxIterations_;
     T       relativeTolerance_;
     T       absoluteTolerance_;
     T       initialResidual_;
@@ -93,10 +93,10 @@ namespace porescale
     krylovSolver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr_t init(parameters<T> * par) = 0;
+    virtual psErr init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual psErr_t build(void) = 0;
+    virtual psErr build(void) = 0;
   };
 
   /** \brief CG solver derived class.
@@ -112,10 +112,10 @@ namespace porescale
     CGSolver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr_t init(parameters<T> * par);
+    virtual psErr init(parameters<T> * par);
 
     /** \brief Solver build function. */
-    virtual psErr_t build(void);
+    virtual psErr build(void);
 
   };
 

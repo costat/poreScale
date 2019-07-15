@@ -29,7 +29,7 @@ porescale::edge<T>::edge(
 
 //--- Public member functions ---//
 template <typename T>
-psErr_t
+psErr
 porescale::edge<T>::init(
     porescale::vertex<T>* v1,
     porescale::vertex<T>* v2
@@ -45,7 +45,7 @@ porescale::edge<T>::init(
 template <typename T>
 porescale::vertex<T>*
 porescale::edge<T>::vertices(
-    psInt_t idx
+    psInt idx
 )
 {
     return vertices_[idx];
@@ -57,7 +57,7 @@ porescale::edge<T>::length(void) const { return length_; }
 
 //--- Private member functions ---//
 template <typename T>
-psErr_t
+psErr
 porescale::edge<T>::computeLength_(void)
 {
     porescale::vertex<T> *v1 = vertices_[0];
@@ -91,7 +91,7 @@ porescale::face<T>::face() : vertices_(NULL), edges_(NULL),
 
 template <typename T>
 porescale::face<T>::face( 
-    psInt_t             nEdges,
+    psInt             nEdges,
     porescale::edge<T>* e1, 
     ...
 )
@@ -115,7 +115,7 @@ porescale::face<T>::face(
     }
     va_end( argPtr );
 
-    psErr_t err;
+    psErr err;
 
     err = init_( edgesTmp );
     assert( err == PORESCALE_SUCCESSFUL );
@@ -127,9 +127,9 @@ porescale::face<T>::face(
 
 //--- Public member functions ---//
 template <typename T>
-psErr_t
+psErr
 porescale::face<T>::init(
-    psInt_t             nEdges,
+    psInt             nEdges,
     porescale::edge<T>* e1, 
     ...
 )
@@ -153,7 +153,7 @@ porescale::face<T>::init(
     }
     va_end( argPtr );
 
-    psErr_t err;
+    psErr err;
 
     err = init_( edgesTmp );
     if (err) return PORESCALE_UNSUCCESSFUL;
@@ -166,7 +166,7 @@ porescale::face<T>::init(
 template <typename T>
 porescale::vertex<T>*
 porescale::face<T>::vertices(
-    psInt_t idx
+    psInt idx
 )
 {
     return vertices_[idx];
@@ -175,33 +175,33 @@ porescale::face<T>::vertices(
 template <typename T>
 porescale::edge<T>*
 porescale::face<T>::edges(
-    psInt_t idx
+    psInt idx
 )
 {
     return edges_[idx];
 }
 
 template <typename T>
-psInt_t porescale::face<T>::nVertices(void) const { return nVertices_; }
+psInt porescale::face<T>::nVertices(void) const { return nVertices_; }
 
 template <typename T>
-psInt_t porescale::face<T>::nEdges(void) const { return nEdges_; }
+psInt porescale::face<T>::nEdges(void) const { return nEdges_; }
 
 template <typename T>
 T porescale::face<T>::area(void) const { return area_; }
 
 //--- Private member functions ---//
 template <typename T>
-psErr_t porescale::face<T>::init_( edge<T>** edgesTmp )
+psErr porescale::face<T>::init_( edge<T>** edgesTmp )
 {
 
-    std::unordered_set< psInt_t > placed;
+    std::unordered_set< psInt > placed;
 
     edges_[0] = edgesTmp[0];
     vertices_[0] = edges_[0]->vertices(0);
     vertices_[1] = edges_[0]->vertices(1);
 
-    psInt_t done;
+    psInt done;
 
     // i tracks idx of edges_ array
     for (int i = 1; i < nEdges_; i++)
@@ -242,7 +242,7 @@ psErr_t porescale::face<T>::init_( edge<T>** edgesTmp )
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::face<T>::computeArea_(void)
 {
 

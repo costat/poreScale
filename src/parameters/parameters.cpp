@@ -43,7 +43,7 @@ porescale::parameters<T>::~parameters(void)
 //--- Public Member Functions ---//
 
 template <typename T>
-psErr_t
+psErr
 porescale::parameters<T>::init(
   std::string& problemPath
 )
@@ -52,7 +52,7 @@ porescale::parameters<T>::init(
 }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::dimension(void) const { return dimension_; }
 
 template <typename T>
@@ -72,23 +72,23 @@ T
 porescale::parameters<T>::inflowMax(void) const { return inflowMax_; }
 
 template <typename T>
-psUInt8_t *
+psUInt8 *
 porescale::parameters<T>::voxelGeometry(void) { return voxelGeometry_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::nx(void) const { return nx_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::ny(void) const { return ny_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::nz(void) const { return nz_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::solverMaxIterations(void) const { return solverMaxIterations_; }
 
 template <typename T>
@@ -100,7 +100,7 @@ T
 porescale::parameters<T>::solverRelativeTolerance(void) const { return solverRelativeTolerance_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::solverVerbose(void) const { return solverVerbose_; }
 
 template <typename T>
@@ -108,11 +108,11 @@ std::string&
 porescale::parameters<T>::problemPath(void) { return problemPath_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::nRanks(void) const { return nRanks_; }
 
 template <typename T>
-psInt_t
+psInt
 porescale::parameters<T>::rank(void) const { return rank_; }
 
 template <typename T>
@@ -133,7 +133,7 @@ porescale::parameters<T>::printParameters(void)
 //--- Private Member Functions ---//
 
 template <typename T>
-psErr_t
+psErr
 porescale::parameters<T>::initParameters_(
   std::string& problemPath
 )
@@ -150,7 +150,7 @@ porescale::parameters<T>::initParameters_(
   std::string Parameters = problemPath_ + "Parameters.dat";
   std::string Geometry = problemPath_ + "Geometry.dat";
 
-  psErr_t err;
+  psErr err;
 
   err = loadParameters_(Parameters);
   // upon exit all ranks own a copy of the imported voxel geometry
@@ -168,7 +168,7 @@ porescale::parameters<T>::initParameters_(
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::parameters<T>::loadParameters_(
   std::string& problemPath
 )
@@ -227,7 +227,7 @@ porescale::parameters<T>::loadParameters_(
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::parameters<T>::importVoxelGeometry_( 
   std::string& problemPath
 )
@@ -273,12 +273,12 @@ porescale::parameters<T>::importVoxelGeometry_(
     return PORESCALE_UNSUCCESSFUL;
   }
 
-  psInt_t nzFactor = (!nz_) ? 1 : nz_;
-  voxelGeometry_ = new psUInt8_t[nx_ * ny_ * nzFactor];
+  psInt nzFactor = (!nz_) ? 1 : nz_;
+  voxelGeometry_ = new psUInt8[nx_ * ny_ * nzFactor];
 
   std::string hold;
   // read remaining lines of geometry into parameters file
-  psUInt_t inputIter = 0;
+  psUInt inputIter = 0;
   if (nz_) { // 3d voxel file
     for (int nslices = 0; nslices < nz_; nslices++) {
       for (int nrows = 0; nrows < ny_; nrows++) {
@@ -326,7 +326,7 @@ porescale::parameters<T>::importVoxelGeometry_(
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::parameters<T>::partitionVoxelGeometry_(void)
 {
 

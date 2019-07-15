@@ -34,14 +34,14 @@ public:
 
   ~edge();
 
-  psErr_t init( vertex<T>* v1, vertex<T>* v2 );
+  psErr init( vertex<T>* v1, vertex<T>* v2 );
 
-  vertex<T>* vertices( psInt_t idx );
+  vertex<T>* vertices( psInt idx );
   T length(void) const;
 
 private:
 
-  psErr_t computeLength_(void);
+  psErr computeLength_(void);
 
   vertex<T>* vertices_[2];
   T          length_;
@@ -56,31 +56,31 @@ class face
 public:
 
   face();
-  face( psInt_t nEdges, edge<T>* e1,  ... );
+  face( psInt nEdges, edge<T>* e1,  ... );
 
   ~face();
 
-  psErr_t init( psInt_t nEdges, edge<T>* e1,  ... );
+  psErr init( psInt nEdges, edge<T>* e1,  ... );
 
-  vertex<T>*  vertices( psInt_t idx );
-  edge<T>*    edges( psInt_t idx );
+  vertex<T>*  vertices( psInt idx );
+  edge<T>*    edges( psInt idx );
 
-  psInt_t     nVertices(void) const;
-  psInt_t     nEdges(void) const;
+  psInt     nVertices(void) const;
+  psInt     nEdges(void) const;
 
   T           area(void) const;
 
 private:
 
-  psErr_t init_( edge<T>** edgesTmp );
-  psErr_t computeArea_(void);
+  psErr init_( edge<T>** edgesTmp );
+  psErr computeArea_(void);
 
   vertex<T>** vertices_;
   edge<T>**   edges_;
   T           area_;
 
-  psInt_t     nEdges_;
-  psInt_t     nVertices_;
+  psInt     nEdges_;
+  psInt     nVertices_;
 
 };
 

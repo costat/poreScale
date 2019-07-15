@@ -15,7 +15,7 @@ porescale::voxel<T>::voxel(parameters<T> * par) : mesh<T>(par) { }
 
 //--- Public member functions ---//
 template <typename T>
-psErr_t
+psErr
 porescale::voxel<T>::build(void)
 {
   if (this->par_->dimension() == 3) return build3d_();
@@ -23,27 +23,27 @@ porescale::voxel<T>::build(void)
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::voxel<T>::checkSanity(void)
 {
 
-  psInt_t totalChanged = 0;
-  psInt_t nChanged;
+  psInt totalChanged = 0;
+  psInt nChanged;
 
-  psInt_t nz = this->par_->nz();
-  psInt_t ny = this->par_->ny();
-  psInt_t nx = this->par_->nx();
+  psInt nz = this->par_->nz();
+  psInt ny = this->par_->ny();
+  psInt nx = this->par_->nx();
 
-  psUInt8_t * voxelGeometryPtr = this->par_->voxelGeometry();
+  psUInt8 * voxelGeometryPtr = this->par_->voxelGeometry();
 
   if (this->par_->dimension() == 3) goto checkSanity3;
 
   checkSanity3:
   {
     nChanged = 0;
-    for (psInt_t zi = 0; zi < nz; zi++) {
-      for (psInt_t yi = 0; yi < ny; yi++) {
-        for (psInt_t xi = 0; xi < nx; xi++) {
+    for (psInt zi = 0; zi < nz; zi++) {
+      for (psInt yi = 0; yi < ny; yi++) {
+        for (psInt xi = 0; xi < nx; xi++) {
 
           if (voxelGeometryPtr[idx3(zi, yi, xi, ny, nx)] != 1) {
             // xi sanity
@@ -119,8 +119,8 @@ porescale::voxel<T>::checkSanity(void)
   checkSanity2:
   {
     nChanged = 0;
-    for (psInt_t yi = 0; yi < ny; yi++) {
-      for (psInt_t xi = 0; xi < nx; xi++) {
+    for (psInt yi = 0; yi < ny; yi++) {
+      for (psInt xi = 0; xi < nx; xi++) {
 
         if (voxelGeometryPtr[idx2(yi, xi, nx)] != 1) {
           // xi sanity
@@ -189,7 +189,7 @@ porescale::voxel<T>::checkSanity(void)
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::voxel<T>::writeVTK(void)
 {
   return PORESCALE_UNSUCCESSFUL;
@@ -197,7 +197,7 @@ porescale::voxel<T>::writeVTK(void)
 
 //--- Priviate member functions ---//
 template <typename T>
-psErr_t
+psErr
 porescale::voxel<T>::build2d_(void)
 {
   T dx = (T)this->par_->length();
@@ -209,7 +209,7 @@ porescale::voxel<T>::build2d_(void)
 }
 
 template <typename T>
-psErr_t
+psErr
 porescale::voxel<T>::build3d_(void)
 {
   return PORESCALE_UNSUCCESSFUL;
