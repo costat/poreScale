@@ -154,7 +154,7 @@ porescale::parameters<T>::initParameters_(
 
   err = loadParameters_(Parameters);
   // upon exit all ranks own a copy of the imported voxel geometry
-  err = importVoxelGeometry_(Geometry);   
+  err = importVoxelGeometry_(Geometry);
 
   MPI_Barrier(PORESCALE_COMM);
 

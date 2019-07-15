@@ -38,6 +38,8 @@ porescale::edge<T>::init(
     vertices_[0] = v1;
     vertices_[1] = v2;
     computeLength_();
+
+    return PORESCALE_SUCCESSFUL;
 }
 
 template <typename T>
@@ -71,6 +73,8 @@ porescale::edge<T>::computeLength_(void)
 
     length_ = sqrt(length_);
     
+    return PORESCALE_SUCCESSFUL;
+
 }
 
 //--- Explicit type instantiations ---//
