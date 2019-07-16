@@ -97,11 +97,11 @@ private:
   void partitionVoxelGeometry_(void);
 
   // Physical information
-  psInt dimension_;                      /**< Specifies if the problem is 2d or 3d. */
-  T       length_;                       /**< Specifies the length of the domain (x-direction). */
-  T       width_;                        /**< Specifies the width of the domain (y-direction). */
-  T       height_;                       /**< Specifies the height of the domain (z-direction). */
-  T       inflowMax_;                    /**< Specifies the maximum inflow velocity. Defaults to 1 */
+  psInt dimension_;                    /**< Specifies if the problem is 2d or 3d. */
+  T     length_;                       /**< Specifies the length of the domain (x-direction). */
+  T     width_;                        /**< Specifies the width of the domain (y-direction). */
+  T     height_;                       /**< Specifies the height of the domain (z-direction). */
+  T     inflowMax_;                    /**< Specifies the maximum inflow velocity. Defaults to 1 */
 
   // Mesh information 
   psUInt  *  localGeometryIndex_;        /**< Vector storing indices of voxelGeometry belonging to current rank. */
@@ -112,8 +112,8 @@ private:
 
   // Solver controls
   psInt solverMaxIterations_;            /**< Specifies the maximum iterations allowed in iterative solvers. */
-  T       solverAbsoluteTolerance_;      /**< Specifies the absolute error tolerance for iterative solvers. */
-  T       solverRelativeTolerance_;      /**< Specifies the relative error tolerance for iterative solvers. */
+  T     solverAbsoluteTolerance_;        /**< Specifies the absolute error tolerance for iterative solvers. */
+  T     solverRelativeTolerance_;        /**< Specifies the relative error tolerance for iterative solvers. */
   psInt solverVerbose_;                  /**< Specifies the level of console output produced by iterative solvers. */
 
   // Save problem folder

@@ -43,7 +43,12 @@ public:
     psInt globalColumns(void) const;
     psInt localColumns(void) const;
 
+    // Converts
+
+    // Memory
     virtual void allocate(void) = 0;
+    virtual void copyHostToDevice(void) = 0;
+    virtual void copyDeviceToHost(void) = 0;
 
 protected:
 
@@ -74,27 +79,40 @@ public:
     /** \brief Construct from parameters. */
     sparseMatrix(parameters<T> * par);
 
+    /** \brief Destructor */
+    ~sparseMatrix(void);
+
     /** \brief Initialize as copy of another matrix. */
     void init(parameters<T> * par);
 
     /** \brief Initialize from 3-arrays. */
 
     // Sets
-    void          setNnz(psInt nnzIn);
+    void          setGlobalNnz(psInt nnzIn);
+    void          setLocalNnz(psInt nnzIn);
 
     // Gets
     psSparseFormat sparseFormat(void) const;
-    psInt          nnz(void) const;
+    psInt          globalNnz(void) const;
+    psInt          localNnz(void) const;
 
     // Converts
 
+    // Memory
     virtual void allocate(void);
+    virtual void copyHostToDevice(void);
+    virtual void copyDeviceToHost(void);
 
 protected:
 
     psSparseFormat sparseFormat_;
-    psInt          nnz_;
+    psInt          globalNnz_;
+    psInt          localNnz_;
 
+    // host data
+    psInt * colArray_;
+    psInt * rowArray_;
+    T     * valueArray_;
 
 };
 

@@ -72,7 +72,6 @@ template <typename T>
 psInt
 porescale::matrix<T>::localColumns(void) const { return localColumns_; }
 
-
 //--- Explicit Instantiations ---//
 template class porescale::matrix<float>;
 template class porescale::matrix<double>;
