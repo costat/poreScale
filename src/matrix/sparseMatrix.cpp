@@ -31,6 +31,8 @@ porescale::sparseMatrix<T>::~sparseMatrix(void)
     }
 }
 
+//--- Accessors ---//
+
 //--- Sets ---//
 template <typename T>
 void
@@ -69,6 +71,8 @@ porescale::sparseMatrix<T>::allocate(void)
         colArray_ = new psInt[localNnz_];
         rowArray_ = new psInt[this->localRows_+1];
         valueArray_ = new T[localNnz_];
+
+
     }
     else if (sparseFormat_ == COO)
     {
@@ -76,6 +80,8 @@ porescale::sparseMatrix<T>::allocate(void)
         rowArray_ = new psInt[localNnz_];
         valueArray_ = new T[localNnz_];
     }
+
+    zero();
 
     this->allocated_ = true;
 }
@@ -91,7 +97,25 @@ template <typename T>
 void
 porescale::sparseMatrix<T>::copyDeviceToHost(void)
 {
-    
+
+}
+
+template <typename T>
+void
+porescale::sparseMatrix<T>::zero(void)
+{
+    if (sparseFormat_ == CSR)
+    {
+        for (int i = 0; i < localNnz_; i++) colArray_[i] = 0;
+        for (int i = 0; i < this->localRows_+1; i++) rowArray_[i] = 0;
+        for (int i = 0; i < localNnz_; i++) valueArray_[i] = 0.0;
+    }
+    else if (sparseFormat_ == COO)
+    {
+        for (int i = 0; i < localNnz_; i++) colArray_[i] = 0;
+        for (int i = 0; i < localNnz_; i++) rowArray_[i] = 0;
+        for (int i = 0; i < localNnz_; i++) valueArray_[i] = 0.0;
+    }
 }
 
 //--- Explicit Instantiations ---//

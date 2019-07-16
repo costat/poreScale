@@ -85,7 +85,12 @@ public:
     /** \brief Initialize as copy of another matrix. */
     void init(parameters<T> * par);
 
-    /** \brief Initialize from 3-arrays. */
+    /** \brief Build with 0'd values. */
+
+
+    /** \brief Build from input arrays. */
+
+    // Accessors
 
     // Sets
     void          setGlobalNnz(psInt nnzIn);
@@ -102,6 +107,7 @@ public:
     virtual void allocate(void);
     virtual void copyHostToDevice(void);
     virtual void copyDeviceToHost(void);
+    virtual void zero(void);
 
 protected:
 
