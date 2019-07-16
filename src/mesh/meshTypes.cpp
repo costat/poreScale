@@ -29,7 +29,7 @@ porescale::edge<T>::edge(
 
 //--- Public member functions ---//
 template <typename T>
-psErr
+void
 porescale::edge<T>::init(
     porescale::vertex<T>* v1,
     porescale::vertex<T>* v2
@@ -39,7 +39,6 @@ porescale::edge<T>::init(
     vertices_[1] = v2;
     computeLength_();
 
-    return PORESCALE_SUCCESSFUL;
 }
 
 template <typename T>
@@ -57,7 +56,7 @@ porescale::edge<T>::length(void) const { return length_; }
 
 //--- Private member functions ---//
 template <typename T>
-psErr
+void
 porescale::edge<T>::computeLength_(void)
 {
     porescale::vertex<T> *v1 = vertices_[0];
@@ -72,8 +71,6 @@ porescale::edge<T>::computeLength_(void)
     }
 
     length_ = sqrt(length_);
-    
-    return PORESCALE_SUCCESSFUL;
 
 }
 
@@ -115,19 +112,15 @@ porescale::face<T>::face(
     }
     va_end( argPtr );
 
-    psErr err;
+    init_( edgesTmp );
 
-    err = init_( edgesTmp );
-    assert( err == PORESCALE_SUCCESSFUL );
-
-    err = computeArea_();
-    assert( err == PORESCALE_SUCCESSFUL );
+    computeArea_();
 
 }
 
 //--- Public member functions ---//
 template <typename T>
-psErr
+void
 porescale::face<T>::init(
     psInt             nEdges,
     porescale::edge<T>* e1, 
@@ -153,14 +146,9 @@ porescale::face<T>::init(
     }
     va_end( argPtr );
 
-    psErr err;
+    init_( edgesTmp );
 
-    err = init_( edgesTmp );
-    if (err) return PORESCALE_UNSUCCESSFUL;
-
-    err = computeArea_();
-    if (err) return PORESCALE_UNSUCCESSFUL;
-    else return PORESCALE_SUCCESSFUL;
+    computeArea_();
 }
 
 template <typename T>
@@ -192,7 +180,8 @@ T porescale::face<T>::area(void) const { return area_; }
 
 //--- Private member functions ---//
 template <typename T>
-psErr porescale::face<T>::init_( edge<T>** edgesTmp )
+void
+porescale::face<T>::init_( edge<T>** edgesTmp )
 {
 
     std::unordered_set< psInt > placed;
@@ -237,12 +226,10 @@ psErr porescale::face<T>::init_( edge<T>** edgesTmp )
 
     // Need a sanity check to establish a closed face was created by these edges
 
-    return PORESCALE_SUCCESSFUL;
-
 }
 
 template <typename T>
-psErr
+void
 porescale::face<T>::computeArea_(void)
 {
 
@@ -272,7 +259,6 @@ porescale::face<T>::computeArea_(void)
     }
 
     // Return unsuccessful until function is finished 
-    return PORESCALE_UNSUCCESSFUL;
 }
 
 //--- Explicit type instantiations ---//

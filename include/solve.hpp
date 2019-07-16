@@ -18,20 +18,16 @@ namespace porescale
   public:
     /** \brief Default constructor. */
     solver(void);
-    /** \brief Construct from parameters. */
-    solver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr init(parameters<T> * par) = 0;
+    virtual void init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual psErr build(void) = 0;
+    virtual void build(void) = 0;
 
   protected:
 
     bool built_;                /**< Flag determining if solver has been built. */
-
-    parameters<T> * par_;       /**< Pointer to parameters object. */
 
   };
 
@@ -48,31 +44,31 @@ namespace porescale
     iterativeSolver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr init(parameters<T> * par) = 0;
+    virtual void init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual psErr build(void) = 0;
+    virtual void build(void) = 0;
 
     /** Gets */
     bool    checkResidual(void) const;
-    psInt minIterations(void) const;
-    psInt maxIterations(void) const;
+    psInt   minIterations(void) const;
+    psInt   maxIterations(void) const;
     T       relativeTolerance(void) const;
     T       absoluteTolerance(void) const;
     T       initialResidual(void) const;
     T       currentResidual(void) const;
 
     /** Sets */
-    psErr setCheckResidual(bool checkRes);
-    psErr setMinIterations(psInt minIterations);
-    psErr setMaxIterations(psInt maxIterations);
-    psErr setRelativeTolerance(T relativeTolerance);
-    psErr setAbsoluteTolerance(T absoluteTolerance);
+    void setCheckResidual(bool checkRes);
+    void setMinIterations(psInt minIterations);
+    void setMaxIterations(psInt maxIterations);
+    void setRelativeTolerance(T relativeTolerance);
+    void setAbsoluteTolerance(T absoluteTolerance);
 
   protected:
     bool    checkResidual_;
-    psInt minIterations_;
-    psInt maxIterations_;
+    psInt   minIterations_;
+    psInt   maxIterations_;
     T       relativeTolerance_;
     T       absoluteTolerance_;
     T       initialResidual_;
@@ -93,10 +89,10 @@ namespace porescale
     krylovSolver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr init(parameters<T> * par) = 0;
+    virtual void init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual psErr build(void) = 0;
+    virtual void build(void) = 0;
   };
 
   /** \brief CG solver derived class.
@@ -112,10 +108,10 @@ namespace porescale
     CGSolver(parameters<T> * par);
 
     /** \brief Init from parameters. */
-    virtual psErr init(parameters<T> * par);
+    virtual void init(parameters<T> * par);
 
     /** \brief Solver build function. */
-    virtual psErr build(void);
+    virtual void build(void);
 
   };
 

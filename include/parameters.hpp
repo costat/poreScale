@@ -34,7 +34,7 @@ public:
   ~parameters(void);
 
   /** \brief Initialize from problem path. */
-  psErr init(std::string& problemPath);
+  void init(std::string& problemPath);
 
   /** \brief Returns problem dimension. */
   psInt      dimension(void) const;
@@ -79,29 +79,29 @@ private:
    * @param[in] problemPath - path to problem folder containing Parameters.dat and Geometry.dat files.
    *
    */
-  psErr initParameters_( std::string& problemPath );
+  void initParameters_( std::string& problemPath );
 
   /** \brief Loads parameters into a parameters struct from Parameters.dat file.
    *
    * @param[in] problemPath - path to Parameters.dat.
    */
-  psErr loadParameters_( std::string& problemPath );
+  void loadParameters_( std::string& problemPath );
 
   /** \brief Reads voxel geometry from Geometry.dat file.
    *
    * @param[in] problemPath - path to Geomtry.dat.
    */
-  psErr importVoxelGeometry_( std::string& problemPath );
+  void importVoxelGeometry_( std::string& problemPath );
 
   /** \brief Function to partition voxel data across MPI ranks. */
-  psErr partitionVoxelGeometry_(void);
+  void partitionVoxelGeometry_(void);
 
   // Physical information
   psInt dimension_;                      /**< Specifies if the problem is 2d or 3d. */
-  T       length_;                         /**< Specifies the length of the domain (x-direction). */
-  T       width_;                          /**< Specifies the width of the domain (y-direction). */
-  T       height_;                         /**< Specifies the height of the domain (z-direction). */
-  T       inflowMax_;                      /**< Specifies the maximum inflow velocity. Defaults to 1 */
+  T       length_;                       /**< Specifies the length of the domain (x-direction). */
+  T       width_;                        /**< Specifies the width of the domain (y-direction). */
+  T       height_;                       /**< Specifies the height of the domain (z-direction). */
+  T       inflowMax_;                    /**< Specifies the maximum inflow velocity. Defaults to 1 */
 
   // Mesh information 
   psUInt  *  localGeometryIndex_;        /**< Vector storing indices of voxelGeometry belonging to current rank. */
@@ -112,15 +112,15 @@ private:
 
   // Solver controls
   psInt solverMaxIterations_;            /**< Specifies the maximum iterations allowed in iterative solvers. */
-  T       solverAbsoluteTolerance_;        /**< Specifies the absolute error tolerance for iterative solvers. */
-  T       solverRelativeTolerance_;        /**< Specifies the relative error tolerance for iterative solvers. */
+  T       solverAbsoluteTolerance_;      /**< Specifies the absolute error tolerance for iterative solvers. */
+  T       solverRelativeTolerance_;      /**< Specifies the relative error tolerance for iterative solvers. */
   psInt solverVerbose_;                  /**< Specifies the level of console output produced by iterative solvers. */
 
   // Save problem folder
-  std::string problemPath_;                /**< Path to folder containing Geometry.dat and Parameters.dat input files. */
+  std::string problemPath_;              /**< Path to folder containing Geometry.dat and Parameters.dat input files. */
 
   // MPI information
-  psInt nRanks_;   		           /**< Number of MPI ranks. */
+  psInt nRanks_;   		                   /**< Number of MPI ranks. */
   psInt rank_;                           /**< Current MPI rank. */
 };
 

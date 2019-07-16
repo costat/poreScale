@@ -43,7 +43,7 @@ porescale::parameters<T>::~parameters(void)
 //--- Public Member Functions ---//
 
 template <typename T>
-psErr
+void
 porescale::parameters<T>::init(
   std::string& problemPath
 )
@@ -133,7 +133,7 @@ porescale::parameters<T>::printParameters(void)
 //--- Private Member Functions ---//
 
 template <typename T>
-psErr
+void
 porescale::parameters<T>::initParameters_(
   std::string& problemPath
 )
@@ -150,25 +150,21 @@ porescale::parameters<T>::initParameters_(
   std::string Parameters = problemPath_ + "Parameters.dat";
   std::string Geometry = problemPath_ + "Geometry.dat";
 
-  psErr err;
-
-  err = loadParameters_(Parameters);
+  loadParameters_(Parameters);
   // upon exit all ranks own a copy of the imported voxel geometry
-  err = importVoxelGeometry_(Geometry);
+  importVoxelGeometry_(Geometry);
 
   MPI_Barrier(PORESCALE_COMM);
 
   // upon exit each rank knows index of its voxels
-  err = partitionVoxelGeometry_();
+  partitionVoxelGeometry_();
 
   MPI_Barrier(PORESCALE_COMM);
-
-  return err;
 
 }
 
 template <typename T>
-psErr
+void
 porescale::parameters<T>::loadParameters_(
   std::string& problemPath
 )
@@ -194,40 +190,10 @@ porescale::parameters<T>::loadParameters_(
     }
   }
 
-
-  //--- Some error checks ---//
-
-  //--- length ---//
-  if (length_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
-
-  //--- width ---//
-  if (width_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
-
-  //--- solver_max_iterations ---//
-  if (solverMaxIterations_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
-
-  //--- solver_absolute_tolerance ---//
-  if (solverAbsoluteTolerance_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
-
-   //--- solver_relative_tolerance ---//
-  if (solverRelativeTolerance_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
-
-  return PORESCALE_SUCCESSFUL;
-
 }
 
 template <typename T>
-psErr
+void
 porescale::parameters<T>::importVoxelGeometry_( 
   std::string& problemPath
 )
@@ -243,9 +209,6 @@ porescale::parameters<T>::importVoxelGeometry_(
   }
   std::istringstream ix(line);
   ix >> str >> nx_;
-  if (nx_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
 
   // grab ny
   if (ifs.good())
@@ -254,9 +217,6 @@ porescale::parameters<T>::importVoxelGeometry_(
   }
   std::istringstream iy(line);
   iy >> str >> ny_;
-  if (ny_ == 0) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
 
   // grab nz
   if (ifs.good())
@@ -268,10 +228,6 @@ porescale::parameters<T>::importVoxelGeometry_(
 
   if (!nz_) dimension_ = 2;
   else dimension_ = 3;
-
-  if (!nx_ || !ny_) {
-    return PORESCALE_UNSUCCESSFUL;
-  }
 
   psInt nzFactor = (!nz_) ? 1 : nz_;
   voxelGeometry_ = new psUInt8[nx_ * ny_ * nzFactor];
@@ -319,14 +275,10 @@ porescale::parameters<T>::importVoxelGeometry_(
     }
   }
 
-  // check consistency between array read in and dimensions in file
-  if (inputIter != nx_ * ny_ * nzFactor - 1) return PORESCALE_UNSUCCESSFUL;
-  else return PORESCALE_SUCCESSFUL;
-
 }
 
 template <typename T>
-psErr
+void
 porescale::parameters<T>::partitionVoxelGeometry_(void)
 {
 
@@ -334,7 +286,6 @@ porescale::parameters<T>::partitionVoxelGeometry_(void)
 
   // partition
 
-  return PORESCALE_UNSUCCESSFUL;
 }
 
 //--- Explicit Type Instantiations ---//

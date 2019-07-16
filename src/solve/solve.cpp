@@ -10,13 +10,7 @@
 
 //--- Constructors ---//
 template <typename T>
-porescale::solver<T>::solver(void) : built_(0), par_(NULL) { }
-
-template <typename T>
-porescale::solver<T>::solver( porescale::parameters<T> * par ) : built_(0)
-{ 
-    par_ = par;
-}
+porescale::solver<T>::solver(void) : built_(0) { }
 
 //--- Explicit Instantiations ---//
 template class porescale::solver<float>;
@@ -31,7 +25,7 @@ porescale::iterativeSolver<T>::iterativeSolver(void) : solver<T>::solver(),
 { };
 
 template <typename T>
-porescale::iterativeSolver<T>::iterativeSolver(parameters<T> * par) : solver<T>::solver( par ),
+porescale::iterativeSolver<T>::iterativeSolver(parameters<T> * par) : solver<T>::solver(),
     checkResidual_(true), minIterations_(0), 
     initialResidual_(-1), currentResidual_(-1)
 { 
@@ -71,44 +65,24 @@ porescale::iterativeSolver<T>::currentResidual(void) const { return currentResid
 
 /** Sets */ 
 template <typename T>
-psErr 
-porescale::iterativeSolver<T>::setCheckResidual(bool checkRes) 
-{ 
-    checkResidual_ = checkRes; 
-    return PORESCALE_SUCCESSFUL; 
-}
+void 
+porescale::iterativeSolver<T>::setCheckResidual(bool checkRes) { checkResidual_ = checkRes; }
 
 template <typename T>
-psErr 
-porescale::iterativeSolver<T>::setMinIterations(psInt minIterations) 
-{ 
-    minIterations_ = minIterations; 
-    return PORESCALE_SUCCESSFUL; 
-}
+void 
+porescale::iterativeSolver<T>::setMinIterations(psInt minIterations) { minIterations_ = minIterations; }
 
 template <typename T>
-psErr 
-porescale::iterativeSolver<T>::setMaxIterations(psInt maxIterations) 
-{ 
-    maxIterations_ = maxIterations; 
-    return PORESCALE_SUCCESSFUL; 
-}
+void 
+porescale::iterativeSolver<T>::setMaxIterations(psInt maxIterations) { maxIterations_ = maxIterations; }
 
 template <typename T>
-psErr 
-porescale::iterativeSolver<T>::setRelativeTolerance(T relativeTolerance) 
-{ 
-    relativeTolerance_ = relativeTolerance; 
-    return PORESCALE_SUCCESSFUL; 
-}
+void 
+porescale::iterativeSolver<T>::setRelativeTolerance(T relativeTolerance) { relativeTolerance_ = relativeTolerance; }
 
 template< typename T>
-psErr
-porescale::iterativeSolver<T>::setAbsoluteTolerance(T absoluteTolerance) 
-{ 
-    absoluteTolerance_ = absoluteTolerance;
-    return PORESCALE_SUCCESSFUL; 
-}
+void
+porescale::iterativeSolver<T>::setAbsoluteTolerance(T absoluteTolerance) { absoluteTolerance_ = absoluteTolerance; }
 
 //--- Explicit Instantiations ---//
 template class porescale::iterativeSolver<float>;

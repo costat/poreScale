@@ -62,13 +62,6 @@ typedef uint8_t			psUInt8;
 #define PORESCALE_UINT8MAX	UINT8_MAX
 #define	PORESCALE_INT8MIN	INT8_MIN
 
-/** \brief poreScale error codes. */
-typedef enum
-{
-	PORESCALE_SUCCESSFUL   = 0,
-	PORESCALE_UNSUCCESSFUL = 1
-} psErr;
-
 #define vBlock 1024
 
 // 1d->2d index

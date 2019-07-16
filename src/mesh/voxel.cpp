@@ -15,7 +15,7 @@ porescale::voxel<T>::voxel(parameters<T> * par) : mesh<T>(par) { }
 
 //--- Public member functions ---//
 template <typename T>
-psErr
+void
 porescale::voxel<T>::build(void)
 {
   if (this->par_->dimension() == 3) return build3d_();
@@ -23,7 +23,7 @@ porescale::voxel<T>::build(void)
 }
 
 template <typename T>
-psErr
+void
 porescale::voxel<T>::checkSanity(void)
 {
 
@@ -184,35 +184,30 @@ porescale::voxel<T>::checkSanity(void)
     std::cout << "were found and removed from void space.\n";
   }
 
-  return PORESCALE_SUCCESSFUL;
-
 }
 
 template <typename T>
-psErr
+void
 porescale::voxel<T>::writeVTK(void)
 {
-  return PORESCALE_UNSUCCESSFUL;
+
 }
 
 //--- Priviate member functions ---//
 template <typename T>
-psErr
+void
 porescale::voxel<T>::build2d_(void)
 {
   T dx = (T)this->par_->length();
   T dy = (T)this->par_->width();
 
-  
-
-  return PORESCALE_UNSUCCESSFUL;
 }
 
 template <typename T>
-psErr
+void
 porescale::voxel<T>::build3d_(void)
 {
-  return PORESCALE_UNSUCCESSFUL;
+
 }
 
 //--- Explicit type instantiations ---//

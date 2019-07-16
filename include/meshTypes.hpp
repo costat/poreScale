@@ -34,14 +34,14 @@ public:
 
   ~edge();
 
-  psErr init( vertex<T>* v1, vertex<T>* v2 );
+  void init( vertex<T>* v1, vertex<T>* v2 );
 
   vertex<T>* vertices( psInt idx );
   T length(void) const;
 
 private:
 
-  psErr computeLength_(void);
+  void computeLength_(void);
 
   vertex<T>* vertices_[2];
   T          length_;
@@ -60,7 +60,7 @@ public:
 
   ~face();
 
-  psErr init( psInt nEdges, edge<T>* e1,  ... );
+   void init( psInt nEdges, edge<T>* e1,  ... );
 
   vertex<T>*  vertices( psInt idx );
   edge<T>*    edges( psInt idx );
@@ -72,8 +72,8 @@ public:
 
 private:
 
-  psErr init_( edge<T>** edgesTmp );
-  psErr computeArea_(void);
+  void init_( edge<T>** edgesTmp );
+  void computeArea_(void);
 
   vertex<T>** vertices_;
   edge<T>**   edges_;

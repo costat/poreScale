@@ -30,13 +30,13 @@ public:
   ~mesh(void);
 
   /** \brief Abstract mesh build function. */
-  virtual psErr build(void)        = 0;
+  virtual void build(void)        = 0;
 
   /** \brief Abstract mesh sanity check. */
-  virtual psErr checkSanity(void)  = 0;
+  virtual void checkSanity(void)  = 0;
 
   /** \brief Abstract function to write VTK file. */
-  virtual psErr writeVTK(void)     = 0;
+  virtual void writeVTK(void)     = 0;
 
   /** \brief Returns flag determining if mesh has been built. */
   bool built(void) const;
@@ -65,20 +65,20 @@ public:
   ~voxel(void);
 
   /** \brief Function to build a quad mesh from voxel data. */
-  virtual psErr build(void);
+  virtual void build(void);
 
   /** \brief Function to check mesh sanity. */
-  virtual psErr checkSanity(void);
+  virtual void checkSanity(void);
 
   /** \brief Function write mesh info to VTK file for visual inspection. */
-  virtual psErr writeVTK(void);
+  virtual void writeVTK(void);
 
 private:
 
   /** \brief Builds mesh for 2d problem. */
-  psErr build2d_(void);
+  void build2d_(void);
   /** \brief Builds mesh for 3d problem. */
-  psErr build3d_(void);
+  void build3d_(void);
 
 };
 
