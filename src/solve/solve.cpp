@@ -10,7 +10,7 @@
 
 //--- Constructors ---//
 template <typename T>
-porescale::solver<T>::solver(void) : built_(0) { }
+porescale::solver<T>::solver(void) : built_(false) { }
 
 //--- Explicit Instantiations ---//
 template class porescale::solver<float>;

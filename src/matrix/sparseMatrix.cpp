@@ -31,6 +31,57 @@ porescale::sparseMatrix<T>::~sparseMatrix(void)
     }
 }
 
+//--- Initiation and build ---//
+template <typename T>
+void
+porescale::sparseMatrix<T>::init(porescale::parameters<T> * par)
+{
+    this->rank_ = par->rank();
+    this->nRanks_ = par->nRanks();
+}
+
+template <typename T>
+void
+porescale::sparseMatrix<T>::buildZero( 
+    psInt localRows,      psInt globalRows, 
+    psInt localColumns,   psInt globalColumns,
+    psInt localNnz,       psInt globalNnz,
+    psSparseFormat format
+)
+{
+    this->setLocalRows(localRows);
+    this->setGlobalRows(globalRows);
+    this->setLocalColumns(localColumns);
+    this->setGlobalColumns(globalColumns);
+    this->setLocalNnz(localNnz);
+    this->setGlobalNnz(globalNnz);
+
+    allocate();
+}
+
+template <typename T>
+void
+porescale::sparseMatrix<T>::build( 
+    psInt   localRows,      psInt            globalRows, 
+    psInt   localColumns,   psInt            globalColumns,
+    psInt   localNnz,       psInt            globalNnz,
+    psInt * colArray,       psInt          * rowArray,
+    T     * valueArray,     psSparseFormat   format
+)
+{
+    this->setLocalRows(localRows);
+    this->setGlobalRows(globalRows);
+    this->setLocalColumns(localColumns);
+    this->setGlobalColumns(globalColumns);
+    this->setLocalNnz(localNnz);
+    this->setGlobalNnz(globalNnz);
+
+    allocate();
+
+
+
+}
+
 //--- Accessors ---//
 
 //--- Sets ---//
@@ -71,8 +122,6 @@ porescale::sparseMatrix<T>::allocate(void)
         colArray_ = new psInt[localNnz_];
         rowArray_ = new psInt[this->localRows_+1];
         valueArray_ = new T[localNnz_];
-
-
     }
     else if (sparseFormat_ == COO)
     {
@@ -81,9 +130,16 @@ porescale::sparseMatrix<T>::allocate(void)
         valueArray_ = new T[localNnz_];
     }
 
-    zero();
-
     this->allocated_ = true;
+}
+
+template <typename T>
+void
+porescale::sparseMatrix<T>::allocateZero(void)
+{
+
+    allocate();
+    zero();
 }
 
 template <typename T>
@@ -117,6 +173,8 @@ porescale::sparseMatrix<T>::zero(void)
         for (int i = 0; i < localNnz_; i++) valueArray_[i] = 0.0;
     }
 }
+
+//--- IO ---//
 
 //--- Explicit Instantiations ---//
 template class porescale::sparseMatrix<float>;

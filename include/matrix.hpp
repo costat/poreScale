@@ -53,13 +53,17 @@ public:
     /** \brief Return the local number of columns. */
     psInt localColumns(void) const;
 
-    // Converts
+    // Convert
 
     // Memory
-    /** \brief Allocates memory based on number of nonzeros and sets all entries to 0. 
-     *  If memory was already allocated, data is wiped and set to 0.
+    /** \brief Allocates memory based on number of nonzeros. 
+     *         If already allocated, deletes and re-allocates.
      */
     virtual void allocate(void) = 0;
+    /** \brief Allocates memory based on number of nonzeros and sets all entries to 0. 
+     *         if already allocated, deletes and re-allocates. 
+     */
+    virtual void allocateZero(void) = 0;
     /** \brief Update device data from host. */
     virtual void copyHostToDevice(void) = 0;
     /** \brief Update host data from device. */
@@ -103,8 +107,17 @@ public:
     void init(parameters<T> * par);
 
     /** \brief Build with 0'd values. */
+    void buildZero( psInt localRows,      psInt globalRows, 
+                    psInt localColumns,   psInt globalColumns,
+                    psInt localNnz,       psInt globalNnz,
+                    psSparseFormat format );
 
     /** \brief Build from input arrays. */
+    void build( psInt   localRows,    psInt   globalRows,
+                psInt   localColumns, psInt   globalColumns,
+                psInt   localNnz,     psInt   globalNnz,
+                psInt * colArray,     psInt * rowArray,
+                T     * valueArray,   psSparseFormat format );
 
     // Accessors
 
@@ -125,10 +138,14 @@ public:
     // Converts
 
     // Memory
-    /** \brief Allocates memory based on number of nonzeros and sets all entries to 0. 
-     *  If memory was already allocated, data is wiped and set to 0.
+    /** \brief Allocates memory based on number of nonzeros.
+     *         If memory was already allocated, deletes and re-allocates.
      */
     virtual void allocate(void);
+    /** \brief Allocates memory based on number of nonzeros and sets all entries to 0.
+     *         If already allocated, deletes and re-allocates. 
+     */
+    virtual void allocateZero(void);
     /** \brief Copy memory to device. */
     virtual void copyHostToDevice(void);
     /** \brief Copy memory back to host. */
