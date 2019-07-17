@@ -78,7 +78,7 @@ struct arrayCOO
 {
   psInt i_index;                                    /**< In determining the row of the array entry. */
   psInt j_index;                                    /**< In determining the column of the array entry. */
-  T        value;                                      /**< Double precision value of the array entry. */
+  T     value;                                      /**< Double precision value of the array entry. */
 };
 
 /** \brief Struct for tracking boundary node information.
@@ -88,7 +88,7 @@ template <typename T>
 struct boundaryNode
 {
   psInt type;              /**< Boundary type. */
-  T        value;             /**< Boundary value. */
+  T     value;             /**< Boundary value. */
 };
 
 /** \brief Enum for selecting inflow boundary condition.
