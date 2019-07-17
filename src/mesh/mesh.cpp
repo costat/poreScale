@@ -7,10 +7,10 @@
 #include "mesh.hpp"
 
 template <typename T>
-porescale::mesh<T>::mesh() : built_(0), par_(NULL) {}
+porescale::mesh<T>::mesh() : built_(false), par_(NULL) {}
 
 template <typename T>
-porescale::mesh<T>::mesh(parameters<T> * par) : built_(0)
+porescale::mesh<T>::mesh(parameters<T> * par) : built_(false)
 {
     par_ = par;
 }
