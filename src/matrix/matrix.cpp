@@ -10,12 +10,12 @@
 template <typename T> 
 porescale::matrix<T>::matrix(void) : rank_(0), nRanks_(0),
     globalRows_(0), localRows_(0), globalColumns_(0), localColumns_(0),
-    allocated_(false) { };
+    firstRow_(0), firstColumn_(0), allocated_(false) { };
 
 template <typename T>
 porescale::matrix<T>::matrix(porescale::parameters<T> * par) :
     globalRows_(0), localRows_(0), globalColumns_(0), localColumns_(0),
-    allocated_(false) 
+    firstRow_(0), firstColumn_(0), allocated_(false) 
 { 
     rank_ = par->rank();
     nRanks_ = par->nRanks();

@@ -38,6 +38,18 @@ public:
     void setGlobalColumns(psInt gColumns);
     /** \brief Set the local number of columns. */
     void setLocalColumns(psInt lColumns);
+    /** \brief Set global index of first row in local matrix. */
+    void setFirstRow(psInt firstRow);
+    /** \brief Set global index of first column in local matrix. */
+    void setFirstColumn(psInt firstColumn);
+    /** \brief Set index of rank containing north neighboring submatrix. */
+    void setNorthNeighbor(psInt northNeighbor);
+    /** \brief Set index of rank containing west neighboring submatrix. */
+    void setWestNeighbor(psInt westNeighbor);
+    /** \brief Set index of rank containing south neighboring submatrix. */
+    void setSouthNeighbor(psInt southNeighbor);
+    /** \brief Set index of rank containing east neighboring submatrix. */
+    void setEastNeighbor(psInt eastNeighbor);
 
     // Gets
     /** \brief Return the current rank. */
@@ -52,6 +64,18 @@ public:
     psInt globalColumns(void) const;
     /** \brief Return the local number of columns. */
     psInt localColumns(void) const;
+    /** \brief Return the global index of the first row in local matrix. */
+    psInt firstRow(void) const;
+    /** \brief Return the global index of the first column in local matrix. */
+    psInt firstColumn(void) const;
+    /** \brief Return the index of rank containing north neighboring submatrix. */
+    psInt northNeighbor(void) const;
+    /** \brief Return the index of rank containing west neighboring submatrix. */
+    psInt westNeighbor(void) const;
+    /** \brief Return the index of rank containing south neighboring submatrix. */
+    psInt southNeighbor(void) const;
+    /** \brief Return the index of rank containing east neighboring submatrix. */
+    psInt eastNeighbor(void) const;
 
     // Convert
 
@@ -72,7 +96,6 @@ public:
     virtual void zero(void) = 0;
 
 protected:
-
     psInt rank_;                /**< Local rank. */ 
     psInt nRanks_;              /**< Global number of ranks. */
 
@@ -81,10 +104,16 @@ protected:
     psInt globalColumns_;       /**< Global number of columns. */
     psInt localColumns_;        /**< Local number of columns. */
 
-    psInt firstRow_;            /**< Row index of first row in this rank. */
-    psInt firstColumn_;         /**< Column index of first column in this rank. */
+    psInt firstRow_;            /**< Global index of first row in this rank. */
+    psInt firstColumn_;         /**< Global index of first column in this rank. */
+
+    psInt northNeighbor_;       /**< Rank containing north neighboring submatrix. */
+    psInt westNeighbor_;        /**< Rank containing west neighboring submatrix. */
+    psInt southNeighbor_;       /**< Rank containing east neighboring submatrix. */
+    psInt eastNeighbor_;        /**< Rank containing west neighboring submatrix. */
 
     bool allocated_;            /**< Flag indicating if matrix memory has been allocated. */
+    bool built_;                /**< Flag indicating if the matrix has been built. */
 
 };
 
@@ -112,14 +141,26 @@ public:
                     psInt localNnz,       psInt globalNnz,
                     psSparseFormat format );
 
-    /** \brief Build from input arrays. */
-    void build( psInt   localRows,    psInt   globalRows,
-                psInt   localColumns, psInt   globalColumns,
-                psInt   localNnz,     psInt   globalNnz,
-                psInt * colArray,     psInt * rowArray,
-                T     * valueArray,   psSparseFormat format );
+    /** \brief Build from input arrays distributed on ranks. */
+    void buildPar( psInt   localRows,    psInt   globalRows,
+                   psInt   localColumns, psInt   globalColumns,
+                   psInt   localNnz,     psInt   globalNnz,
+                   psInt * colArray,     psInt * rowArray,
+                   T     * valueArray,   psSparseFormat format );
+
+    /** \brief Build from master rank and distribute. */
+    void buildSeq( psInt   globalRows,   psInt   globalColumns,
+                   psInt   globalNnz,    psInt * colArray,    
+                   psInt * rowArray,     T     * valueArray,   
+                   psSparseFormat format );
 
     // Accessors
+    /** \brief Pointer to column array. */
+    psInt * columnArray(void);
+    /** \brief Pointer to row array. */
+    psInt * rowArray(void);
+    /** \brief Pointer to value array. */
+    T * valueArray(void);
 
     // Sets
     /** \brief Set the global number of nonzeros. */
