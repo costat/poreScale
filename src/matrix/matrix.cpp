@@ -7,7 +7,7 @@
 #include "matrix.hpp"
 
 //--- Constructors ---//
-template <typename T> 
+template <typename T>
 porescale::matrix<T>::matrix(void) : rank_(0), nRanks_(0),
     globalRows_(0), localRows_(0), globalColumns_(0), localColumns_(0),
     firstRow_(0), firstColumn_(0), allocated_(false) { };
@@ -15,15 +15,15 @@ porescale::matrix<T>::matrix(void) : rank_(0), nRanks_(0),
 template <typename T>
 porescale::matrix<T>::matrix(porescale::parameters<T> * par) :
     globalRows_(0), localRows_(0), globalColumns_(0), localColumns_(0),
-    firstRow_(0), firstColumn_(0), allocated_(false) 
-{ 
+    firstRow_(0), firstColumn_(0), allocated_(false)
+{
     rank_ = par->rank();
     nRanks_ = par->nRanks();
 }
 
 //--- Init ---//
 template <typename T>
-void 
+void
 porescale::matrix<T>::init(parameters<T> * par)
 {
     rank_   = par->rank();
@@ -75,3 +75,4 @@ porescale::matrix<T>::localColumns(void) const { return localColumns_; }
 //--- Explicit Instantiations ---//
 template class porescale::matrix<float>;
 template class porescale::matrix<double>;
+

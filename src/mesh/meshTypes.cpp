@@ -17,8 +17,8 @@ porescale::edge<T>::edge() : length_(0.0)
 }
 
 template <typename T>
-porescale::edge<T>::edge( 
-    porescale::vertex<T>* v1, 
+porescale::edge<T>::edge(
+    porescale::vertex<T>* v1,
     porescale::vertex<T>* v2
 )
 {
@@ -51,7 +51,7 @@ porescale::edge<T>::vertices(
 }
 
 template <typename T>
-T 
+T
 porescale::edge<T>::length(void) const { return length_; }
 
 //--- Private member functions ---//
@@ -64,7 +64,7 @@ porescale::edge<T>::computeLength_(void)
 
     T tmp;
     length_ = 0.0;
-    for (int i = 0; i < 3; i++) 
+    for (int i = 0; i < 3; i++)
     {
         tmp = (v1->coordinates[i] - v2->coordinates[i]);
         length_ += tmp*tmp;
@@ -83,13 +83,13 @@ template class porescale::edge<double>;
 
 //--- Constructors and Destructors ---//
 template <typename T>
-porescale::face<T>::face() : vertices_(NULL), edges_(NULL), 
+porescale::face<T>::face() : vertices_(NULL), edges_(NULL),
                              area_(0.0), nEdges_(0), nVertices_(0) { }
 
 template <typename T>
-porescale::face<T>::face( 
+porescale::face<T>::face(
     psInt             nEdges,
-    porescale::edge<T>* e1, 
+    porescale::edge<T>* e1,
     ...
 )
 {
@@ -123,7 +123,7 @@ template <typename T>
 void
 porescale::face<T>::init(
     psInt             nEdges,
-    porescale::edge<T>* e1, 
+    porescale::edge<T>* e1,
     ...
 )
 {
@@ -200,7 +200,7 @@ porescale::face<T>::init_( edge<T>** edgesTmp )
         for (int j = 1; j < nEdges_; j++)
         {
             // is this a candidate
-            if (placed.find(j) == placed.end()) 
+            if (placed.find(j) == placed.end())
             {
                 if (edgesTmp[j]->vertices(0) == edges_[i-1]->vertices(1))
                 {
@@ -258,9 +258,10 @@ porescale::face<T>::computeArea_(void)
 
     }
 
-    // Return unsuccessful until function is finished 
+    // Return unsuccessful until function is finished
 }
 
 //--- Explicit type instantiations ---//
 template class porescale::face<float>;
 template class porescale::face<double>;
+
