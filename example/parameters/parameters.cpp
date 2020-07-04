@@ -1,4 +1,4 @@
-/* Example loads parameters and voxel geometry and prints diagnostic info to console. 
+/* Example loads parameters and voxel geometry and prints diagnostic info to console.
    The mesh is saved for visualization. Build with included
    CMakeLists.txt, and use:
       parameters <path/to/problemfolder>
@@ -24,7 +24,7 @@ main( int argc, const char* argv[] )
   MPI_Init(NULL, NULL);
 
   MPI_Comm_size( MPI_COMM_WORLD, &nRanks );
-  MPI_Comm_rank( MPI_COMM_WORLD, &rank );  
+  MPI_Comm_rank( MPI_COMM_WORLD, &rank );
 
   //-- timers --//
   double begin, rebegin, para_time, mesh_time, build_time, solve_time, postp_time, total_time;
@@ -32,7 +32,7 @@ main( int argc, const char* argv[] )
   begin = MPI_Wtime();
   //--- problem parameters ---//
   std::string problemPath(argv[1]);
-  porescale::parameters<double> par( problemPath );
+  porescale::parameters<float> par( problemPath );
 
   para_time = MPI_Wtime() - begin;
   rebegin = MPI_Wtime();
@@ -44,8 +44,8 @@ main( int argc, const char* argv[] )
 
   mesh_time = MPI_Wtime() - rebegin;
   rebegin = MPI_Wtime();
-  // print parameters 
-  if (rank == MASTER_RANK) par.printParameters(); 
+  // print parameters
+  if (rank == MASTER_RANK) par.printParameters();
   MPI_Barrier( MPI_COMM_WORLD );
 
   // save the mesh for visualization with paraview
@@ -60,7 +60,7 @@ main( int argc, const char* argv[] )
     std::cout << "Mesh time: " << mesh_time << "\n";
     std::cout << "Post processessing time: " << postp_time << "\n";
     std::cout << "Total time: " << total_time << "\n";
-  } 
+  }
 
   MPI_Finalize();
 
