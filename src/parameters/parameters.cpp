@@ -11,7 +11,7 @@ template <typename T>
 porescale::parameters<T>::parameters(void) : dimension_(0), length_(0), width_(0), height_(0),
                                                              inflowMax_(1.0), voxelGeometry_(NULL),
                                                              localGeometryIndex_(NULL),
-                                                             nx_(0), ny_(0), nz_(0), 
+                                                             nx_(0), ny_(0), nz_(0),
                                                              solverMaxIterations_(100),
                                                              solverAbsoluteTolerance_(1e-4),
                                                              solverRelativeTolerance_(1e-4),
@@ -22,7 +22,7 @@ template <typename T>
 porescale::parameters<T>::parameters( std::string& problemPath ) : dimension_(0), length_(0), width_(0), height_(0),
                                                              inflowMax_(1.0), voxelGeometry_(NULL),
                                                              localGeometryIndex_(NULL),
-                                                             nx_(0), ny_(0), nz_(0), 
+                                                             nx_(0), ny_(0), nz_(0),
                                                              solverMaxIterations_(100),
                                                              solverAbsoluteTolerance_(1e-4),
                                                              solverRelativeTolerance_(1e-4),
@@ -104,7 +104,7 @@ psInt
 porescale::parameters<T>::solverVerbose(void) const { return solverVerbose_; }
 
 template <typename T>
-std::string& 
+std::string&
 porescale::parameters<T>::problemPath(void) { return problemPath_; }
 
 template <typename T>
@@ -194,7 +194,7 @@ porescale::parameters<T>::loadParameters_(
 
 template <typename T>
 void
-porescale::parameters<T>::importVoxelGeometry_( 
+porescale::parameters<T>::importVoxelGeometry_(
   std::string& problemPath
 )
 {
@@ -282,12 +282,15 @@ void
 porescale::parameters<T>::partitionVoxelGeometry_(void)
 {
 
-  // WIP  here //
+  // partition -- determine the voxels that "belong" to this rank, and set up neighbor information.
 
-  // partition
+  if (nRanks_ == 1) {
+
+  }
 
 }
 
 //--- Explicit Type Instantiations ---//
 template class porescale::parameters<double>;
 template class porescale::parameters<float>;
+
