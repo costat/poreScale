@@ -36,8 +36,8 @@ template <typename T>
 void
 porescale::sparseMatrix<T>::init(porescale::parameters<T> * par)
 {
-    this->rank_ = par->rank();
-    this->nRanks_ = par->nRanks();
+    this->myPe_ = par->myPe();
+    this->nPes_ = par->nPes();
 }
 
 template <typename T>

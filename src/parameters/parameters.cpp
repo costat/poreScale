@@ -16,7 +16,7 @@ porescale::parameters<T>::parameters(void) : dimension_(0), length_(0), width_(0
                                                              solverAbsoluteTolerance_(1e-4),
                                                              solverRelativeTolerance_(1e-4),
                                                              solverVerbose_(1),
-                                                             nRanks_(0), rank_(0) {}
+                                                             nPes_(0), myPe_(0) {}
 
 template <typename T>
 porescale::parameters<T>::parameters( std::string& problemPath ) : dimension_(0), length_(0), width_(0), height_(0),
@@ -27,7 +27,7 @@ porescale::parameters<T>::parameters( std::string& problemPath ) : dimension_(0)
                                                              solverAbsoluteTolerance_(1e-4),
                                                              solverRelativeTolerance_(1e-4),
                                                              solverVerbose_(1),
-                                                             nRanks_(0), rank_(0)
+                                                             nPes_(0), myPe_(0)
 {
   initParameters_( problemPath );
 }
@@ -109,16 +109,17 @@ porescale::parameters<T>::problemPath(void) { return problemPath_; }
 
 template <typename T>
 psInt
-porescale::parameters<T>::nRanks(void) const { return nRanks_; }
+porescale::parameters<T>::myPe(void) const { return myPe_; }
 
 template <typename T>
 psInt
-porescale::parameters<T>::rank(void) const { return rank_; }
+porescale::parameters<T>::nPes(void) const { return nPes_; }
 
 template <typename T>
 void
 porescale::parameters<T>::printParameters(void)
 {
+  std::cout << "Number of NVSHMEM Processing Elements= " << nPes_ << "\n";
   std::cout << "Dimension= " << dimension_ << "\n";
   std::cout << "Geometry length= " << length_ << "\n";
   std::cout << "Geometry width= " << width_ << "\n";
@@ -139,27 +140,26 @@ porescale::parameters<T>::initParameters_(
 )
 {
 
-  int MPIinit = 0;
-  MPI_Initialized( &MPIinit );
-  if (!MPIinit) MPI_Init(NULL, NULL);
-
-  MPI_Comm_size( PORESCALE_COMM, &nRanks_ );
-  MPI_Comm_rank( PORESCALE_COMM, &rank_ );
+  // NVSHMEM Setup
+  nPes_ = nvshmem_n_pes();
+  myPe_ = nvshmem_my_pe();
 
   problemPath_ = problemPath;
   std::string Parameters = problemPath_ + "Parameters.dat";
   std::string Geometry = problemPath_ + "Geometry.dat";
 
   loadParameters_(Parameters);
-  // upon exit all ranks own a copy of the imported voxel geometry
+  // upon exit all PEs own a copy of the imported voxel geometry
   importVoxelGeometry_(Geometry);
 
-  MPI_Barrier(PORESCALE_COMM);
+  // nvshmem barrier
+  nvshmem_barrier_all();
 
-  // upon exit each rank knows index of its voxels
+  // upon exit each PE knows index of its voxels
   partitionVoxelGeometry_();
 
-  MPI_Barrier(PORESCALE_COMM);
+  // nvshmem barrier
+  nvshmem_barrier_all();
 
 }
 
@@ -282,9 +282,9 @@ void
 porescale::parameters<T>::partitionVoxelGeometry_(void)
 {
 
-  // partition -- determine the voxels that "belong" to this rank, and set up neighbor information.
+  // partition -- determine the voxels that "belong" to this PE, and set up neighbor information.
 
-  if (nRanks_ == 1) {
+  if (nPes_ == 1) {
 
   }
 

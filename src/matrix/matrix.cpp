@@ -8,7 +8,7 @@
 
 //--- Constructors ---//
 template <typename T>
-porescale::matrix<T>::matrix(void) : rank_(0), nRanks_(0),
+porescale::matrix<T>::matrix(void) : myPe_(0), nPes_(0),
     globalRows_(0), localRows_(0), globalColumns_(0), localColumns_(0),
     firstRow_(0), firstColumn_(0), allocated_(false) { };
 
@@ -17,8 +17,8 @@ porescale::matrix<T>::matrix(porescale::parameters<T> * par) :
     globalRows_(0), localRows_(0), globalColumns_(0), localColumns_(0),
     firstRow_(0), firstColumn_(0), allocated_(false)
 {
-    rank_ = par->rank();
-    nRanks_ = par->nRanks();
+    myPe_ = par->myPe();
+    nPes_ = par->nPes();
 }
 
 //--- Init ---//
@@ -26,8 +26,8 @@ template <typename T>
 void
 porescale::matrix<T>::init(parameters<T> * par)
 {
-    rank_   = par->rank();
-    nRanks_ = par->nRanks();
+    myPe_   = par->myPe();
+    nPes_ = par->nPes();
 }
 
 //--- Sets ---//
@@ -50,11 +50,11 @@ porescale::matrix<T>::setLocalColumns(psInt lColumns) { localColumns_ = lColumns
 //--- Gets ---//
 template <typename T>
 psInt
-porescale::matrix<T>::rank(void) const { return rank_; }
+porescale::matrix<T>::myPe(void) const { return myPe_; }
 
 template <typename T>
 psInt
-porescale::matrix<T>::nRanks(void) const { return nRanks_; }
+porescale::matrix<T>::nPes(void) const { return nPes_; }
 
 template <typename T>
 psInt

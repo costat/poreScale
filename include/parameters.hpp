@@ -7,7 +7,8 @@
 #ifndef _PORESCALE_PARAMETERS_H_
 #define _PORESCALE_PARAMETERS_H_
 
-#include <mpi.h>
+#include <nvshmem.h>
+#include <nvshmemx.h>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -64,10 +65,10 @@ public:
   psInt      solverVerbose(void) const;
   /** \brief Returns reference to the problem path. */
   std::string& problemPath(void);
-  /** \brief Returns number of global ranks. */
-  psInt      nRanks(void) const;
-  /** \brief Returns rank of current process. */
-  psInt      rank(void) const;
+  /** \brief Returns id of current pe. */
+  psInt      myPe(void) const;
+  /** \brief Returns number of processing elements. */
+  psInt      nPes(void) const;
 
   /** \brief Prints problem parameters to console. */
   void printParameters(void);
@@ -75,7 +76,7 @@ public:
 private:
 
   /** \brief Initializes a parameters struct from data in a problem directory.
-   * 
+   *
    * @param[in] problemPath - path to problem folder containing Parameters.dat and Geometry.dat files.
    *
    */
@@ -93,7 +94,7 @@ private:
    */
   void importVoxelGeometry_( std::string& problemPath );
 
-  /** \brief Function to partition voxel data across MPI ranks. */
+  /** \brief Function to partition voxel data across PEs. */
   void partitionVoxelGeometry_(void);
 
   // Physical information
@@ -103,8 +104,8 @@ private:
   T     height_;                       /**< Specifies the height of the domain (z-direction). */
   T     inflowMax_;                    /**< Specifies the maximum inflow velocity. Defaults to 1 */
 
-  // Mesh information 
-  psUInt  *  localGeometryIndex_;        /**< Vector storing indices of voxelGeometry belonging to current rank. */
+  // Mesh information
+  psUInt  *  localGeometryIndex_;        /**< Vector storing indices of voxelGeometry belonging to current PE. */
   psUInt8 *  voxelGeometry_;             /**< Vector storing a voxel geometry read from the Geometry.dat input file. */
   psInt      nx_;                        /**< Specifies the x mesh dimension. */
   psInt      ny_;                        /**< Specifies the y mesh dimension. */
@@ -119,9 +120,10 @@ private:
   // Save problem folder
   std::string problemPath_;              /**< Path to folder containing Geometry.dat and Parameters.dat input files. */
 
-  // MPI information
-  psInt nRanks_;   		                   /**< Number of MPI ranks. */
-  psInt rank_;                           /**< Current MPI rank. */
+  // NVSHMEM information
+  psInt nPes_;				 /**< Number of NVSHMEM Processing Elements. */
+  psInt myPe_;				 /**< Return ID of current PE. */
+
 };
 
 }
