@@ -23,26 +23,28 @@ int
 main( int argc, const char* argv[] )
 {
 
-  int devCount;
-  cudaGetDeviceCount(&devCount);
-
-  std::cout << "There are " << devCount << " CUDA devices.\n";
-
-  for (int i = 0; i < devCount; ++i) {
-    std::cout << "------------ Device " << i << " ------------\n";
-    cudaDeviceProp devProp;
-    cudaGetDeviceProperties(&devProp, i);
-    printDevProp(devProp);
-    std::cout << "\n";
-  }
-
-  // Init MPI
+  // Init NVSHMEM
   nvshmem_init();
 
   int myPe = nvshmem_my_pe();
   int nPes = nvshmem_n_pes();
 
   cudaSetDevice(myPe);
+
+  int devCount;
+  cudaGetDeviceCount(&devCount);
+
+  if (myPe == CONTROL_PE) {
+    std::cout << "There are " << devCount << " CUDA devices.\n";
+
+    for (int i = 0; i < devCount; ++i) {
+      std::cout << "------------ Device " << i << " ------------\n";
+      cudaDeviceProp devProp;
+      cudaGetDeviceProperties(&devProp, i);
+      printDevProp(devProp);
+      std::cout << "\n";
+    }
+  }
 
   auto begin = std::chrono::high_resolution_clock::now();
 
