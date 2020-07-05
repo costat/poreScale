@@ -5,63 +5,79 @@
    Some example problem folders are included at examples/geometries.
 */
 
+#include "../util/printDeviceProp.hpp"
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
-#include <mpi.h>
+#include "cuda.h"
+#include "nvshmem.h"
+#include "nvshmemx.h"
 
 #include "porescale.hpp"
 
-#define MASTER_RANK 0
+#define CONTROL_PE 0
 
 int
 main( int argc, const char* argv[] )
 {
 
+  int devCount;
+  cudaGetDeviceCount(&devCount);
+
+  std::cout << "There are " << devCount << " CUDA devices.\n";
+
+  for (int i = 0; i < devCount; ++i) {
+    std::cout << "------------ Device " << i << " ------------\n";
+    cudaDeviceProp devProp;
+    cudaGetDeviceProperties(&devProp, i);
+    printDevProp(devProp);
+    std::cout << "\n";
+  }
+
   // Init MPI
-  int nRanks, rank;
+  nvshmem_init();
 
-  MPI_Init(NULL, NULL);
+  int myPe = nvshmem_my_pe();
+  int nPes = nvshmem_n_pes();
 
-  MPI_Comm_size( MPI_COMM_WORLD, &nRanks );
-  MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+  cudaSetDevice(myPe);
 
   //-- timers --//
-  double begin, rebegin, para_time, mesh_time, build_time, solve_time, postp_time, total_time;
+//  double begin=0, rebegin=0, para_time=0, mesh_time=0, build_time=0, solve_time=0, postp_time=0, total_time=0;
 
-  begin = MPI_Wtime();
+//  begin = MPI_Wtime();
   //--- problem parameters ---//
   std::string problemPath(argv[1]);
   porescale::parameters<float> par( problemPath );
 
-  para_time = MPI_Wtime() - begin;
-  rebegin = MPI_Wtime();
+//  para_time = MPI_Wtime() - begin;
+//  rebegin = MPI_Wtime();
 
   //--- mesh ---//
   // check mesh sanity and remove dead pores
 
   // build the mesh
 
-  mesh_time = MPI_Wtime() - rebegin;
-  rebegin = MPI_Wtime();
+//  mesh_time = MPI_Wtime() - rebegin;
+//  rebegin = MPI_Wtime();
   // print parameters
-  if (rank == MASTER_RANK) par.printParameters();
-  MPI_Barrier( MPI_COMM_WORLD );
+  if (myPe == CONTROL_PE) par.printParameters();
+  nvshmem_barrier_all();
 
   // save the mesh for visualization with paraview
 
-  postp_time = MPI_Wtime() - rebegin;
-  total_time = MPI_Wtime() - begin;
+//  postp_time = MPI_Wtime() - rebegin;
+//  total_time = MPI_Wtime() - begin;
 
   // print timings
-  if (rank == MASTER_RANK) {
-    std::cout << "\n\n//------------------ Stokes Finished! Time reports ------------------//\n";
+/*  if (myPe == CONTROL_PE) {
+    std::cout << "\n\n//------------------ Finished! Time reports ------------------//\n";
     std::cout << "Parameter setup time: " << para_time << "\n";
     std::cout << "Mesh time: " << mesh_time << "\n";
     std::cout << "Post processessing time: " << postp_time << "\n";
     std::cout << "Total time: " << total_time << "\n";
-  }
+  }*/
 
-  MPI_Finalize();
+  nvshmem_finalize();
 
 }
