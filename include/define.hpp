@@ -14,8 +14,7 @@
 #include <cassert>
 #include "math.h"
 
-#define MASTER_NODE 0
-#define PORESCALE_COMM MPI_COMM_WORLD
+#define CONTROL_PE 0
 
 #if defined(__PORESCALE_INT8__)
 
