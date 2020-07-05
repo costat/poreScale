@@ -148,14 +148,8 @@ porescale::parameters<T>::initParameters_(
   // upon exit all PEs own a copy of the imported voxel geometry
   importVoxelGeometry_(Geometry);
 
-  // nvshmem barrier
-  nvshmem_barrier_all();
-
   // upon exit each PE knows index of its voxels
   partitionVoxelGeometry_();
-
-  // nvshmem barrier
-  nvshmem_barrier_all();
 
 }
 
@@ -282,8 +276,7 @@ porescale::parameters<T>::partitionVoxelGeometry_(void)
 
   // Special case for single GPU
   if (nPes_ == 1) {
-
-
+    d_localVoxelGeometry_ = voxelGeometry_;
     return;
   }
 
