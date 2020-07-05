@@ -9,6 +9,8 @@
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
+#include <chrono>
+#include <ctime>
 #include "cuda.h"
 #include "nvshmem.h"
 #include "nvshmemx.h"
@@ -42,41 +44,39 @@ main( int argc, const char* argv[] )
 
   cudaSetDevice(myPe);
 
-  //-- timers --//
-//  double begin=0, rebegin=0, para_time=0, mesh_time=0, build_time=0, solve_time=0, postp_time=0, total_time=0;
+  auto begin = std::chrono::high_resolution_clock::now();
 
-//  begin = MPI_Wtime();
   //--- problem parameters ---//
   std::string problemPath(argv[1]);
   porescale::parameters<float> par( problemPath );
 
-//  para_time = MPI_Wtime() - begin;
-//  rebegin = MPI_Wtime();
+  double para_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - begin).count();
+  auto rebegin = std::chrono::high_resolution_clock::now();
 
   //--- mesh ---//
   // check mesh sanity and remove dead pores
 
   // build the mesh
 
-//  mesh_time = MPI_Wtime() - rebegin;
-//  rebegin = MPI_Wtime();
+  double mesh_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - rebegin).count();
+  rebegin = std::chrono::high_resolution_clock::now();
+
   // print parameters
   if (myPe == CONTROL_PE) par.printParameters();
-  nvshmem_barrier_all();
 
   // save the mesh for visualization with paraview
 
-//  postp_time = MPI_Wtime() - rebegin;
-//  total_time = MPI_Wtime() - begin;
+  double postp_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - rebegin).count();
+  double total_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - begin).count();
 
   // print timings
-/*  if (myPe == CONTROL_PE) {
+  if (myPe == CONTROL_PE) {
     std::cout << "\n\n//------------------ Finished! Time reports ------------------//\n";
-    std::cout << "Parameter setup time: " << para_time << "\n";
-    std::cout << "Mesh time: " << mesh_time << "\n";
-    std::cout << "Post processessing time: " << postp_time << "\n";
-    std::cout << "Total time: " << total_time << "\n";
-  }*/
+    std::cout << "Parameter setup time: " << para_time << " ms\n";
+    std::cout << "Mesh time: " << mesh_time << " ms\n";
+    std::cout << "Post processessing time: " << postp_time << " ms\n";
+    std::cout << "Total time: " << total_time << " ms\n";
+  }
 
   nvshmem_finalize();
 
