@@ -12,9 +12,9 @@
 
 namespace porescale
 {
-    
+
 /** \brief Abstract base matrix class
- * 
+ *
  */
 template <typename T>
 class matrix
@@ -42,20 +42,20 @@ public:
     void setFirstRow(psInt firstRow);
     /** \brief Set global index of first column in local matrix. */
     void setFirstColumn(psInt firstColumn);
-    /** \brief Set index of rank containing north neighboring submatrix. */
+    /** \brief Set index of pe containing north neighboring submatrix. */
     void setNorthNeighbor(psInt northNeighbor);
-    /** \brief Set index of rank containing west neighboring submatrix. */
+    /** \brief Set index of pe containing west neighboring submatrix. */
     void setWestNeighbor(psInt westNeighbor);
-    /** \brief Set index of rank containing south neighboring submatrix. */
+    /** \brief Set index of pe containing south neighboring submatrix. */
     void setSouthNeighbor(psInt southNeighbor);
-    /** \brief Set index of rank containing east neighboring submatrix. */
+    /** \brief Set index of pe containing east neighboring submatrix. */
     void setEastNeighbor(psInt eastNeighbor);
 
     // Gets
-    /** \brief Return the current rank. */
-    psInt rank(void) const;
-    /** \brief Return the global number of ranks. */
-    psInt nRanks(void) const;
+    /** \brief Return the current pe. */
+    psInt myPe(void) const;
+    /** \brief Return the global number of pes. */
+    psInt nPes(void) const;
     /** \brief Return the global number of rows. */
     psInt globalRows(void) const;
     /** \brief Returns the local number of rows. */
@@ -68,24 +68,24 @@ public:
     psInt firstRow(void) const;
     /** \brief Return the global index of the first column in local matrix. */
     psInt firstColumn(void) const;
-    /** \brief Return the index of rank containing north neighboring submatrix. */
+    /** \brief Return the index of pe containing north neighboring submatrix. */
     psInt northNeighbor(void) const;
-    /** \brief Return the index of rank containing west neighboring submatrix. */
+    /** \brief Return the index of pe containing west neighboring submatrix. */
     psInt westNeighbor(void) const;
-    /** \brief Return the index of rank containing south neighboring submatrix. */
+    /** \brief Return the index of pe containing south neighboring submatrix. */
     psInt southNeighbor(void) const;
-    /** \brief Return the index of rank containing east neighboring submatrix. */
+    /** \brief Return the index of pe containing east neighboring submatrix. */
     psInt eastNeighbor(void) const;
 
     // Convert
 
     // Memory
-    /** \brief Allocates memory based on number of nonzeros. 
+    /** \brief Allocates memory based on number of nonzeros.
      *         If already allocated, deletes and re-allocates.
      */
     virtual void allocate(void) = 0;
-    /** \brief Allocates memory based on number of nonzeros and sets all entries to 0. 
-     *         if already allocated, deletes and re-allocates. 
+    /** \brief Allocates memory based on number of nonzeros and sets all entries to 0.
+     *         if already allocated, deletes and re-allocates.
      */
     virtual void allocateZero(void) = 0;
     /** \brief Update device data from host. */
@@ -96,21 +96,21 @@ public:
     virtual void zero(void) = 0;
 
 protected:
-    psInt rank_;                /**< Local rank. */ 
-    psInt nRanks_;              /**< Global number of ranks. */
+    psInt myPe_;                /**< Local pe. */
+    psInt nPes_;              /**< Global number of pes. */
 
     psInt globalRows_;          /**< Global number of rows. */
     psInt localRows_;           /**< Local number of rows */
     psInt globalColumns_;       /**< Global number of columns. */
     psInt localColumns_;        /**< Local number of columns. */
 
-    psInt firstRow_;            /**< Global index of first row in this rank. */
-    psInt firstColumn_;         /**< Global index of first column in this rank. */
+    psInt firstRow_;            /**< Global index of first row in this pe. */
+    psInt firstColumn_;         /**< Global index of first column in this pe. */
 
-    psInt northNeighbor_;       /**< Rank containing north neighboring submatrix. */
-    psInt westNeighbor_;        /**< Rank containing west neighboring submatrix. */
-    psInt southNeighbor_;       /**< Rank containing east neighboring submatrix. */
-    psInt eastNeighbor_;        /**< Rank containing west neighboring submatrix. */
+    psInt northNeighbor_;       /**< Pe containing north neighboring submatrix. */
+    psInt westNeighbor_;        /**< Pe containing west neighboring submatrix. */
+    psInt southNeighbor_;       /**< Pe containing east neighboring submatrix. */
+    psInt eastNeighbor_;        /**< Pe containing west neighboring submatrix. */
 
     bool allocated_;            /**< Flag indicating if matrix memory has been allocated. */
     bool built_;                /**< Flag indicating if the matrix has been built. */
@@ -118,7 +118,7 @@ protected:
 };
 
 /** \brief Sparse matrix derived class
- * 
+ *
  */
 template <typename T>
 class sparseMatrix : public matrix<T>
@@ -136,22 +136,22 @@ public:
     void init(parameters<T> * par);
 
     /** \brief Build with 0'd values. */
-    void buildZero( psInt localRows,      psInt globalRows, 
+    void buildZero( psInt localRows,      psInt globalRows,
                     psInt localColumns,   psInt globalColumns,
                     psInt localNnz,       psInt globalNnz,
                     psSparseFormat format );
 
-    /** \brief Build from input arrays distributed on ranks. */
+    /** \brief Build from input arrays distributed on pes. */
     void buildPar( psInt   localRows,    psInt   globalRows,
                    psInt   localColumns, psInt   globalColumns,
                    psInt   localNnz,     psInt   globalNnz,
                    psInt * colArray,     psInt * rowArray,
                    T     * valueArray,   psSparseFormat format );
 
-    /** \brief Build from master rank and distribute. */
+    /** \brief Build from master pe and distribute. */
     void buildSeq( psInt   globalRows,   psInt   globalColumns,
-                   psInt   globalNnz,    psInt * colArray,    
-                   psInt * rowArray,     T     * valueArray,   
+                   psInt   globalNnz,    psInt * colArray,
+                   psInt * rowArray,     T     * valueArray,
                    psSparseFormat format );
 
     // Accessors
@@ -184,7 +184,7 @@ public:
      */
     virtual void allocate(void);
     /** \brief Allocates memory based on number of nonzeros and sets all entries to 0.
-     *         If already allocated, deletes and re-allocates. 
+     *         If already allocated, deletes and re-allocates.
      */
     virtual void allocateZero(void);
     /** \brief Copy memory to device. */
@@ -197,7 +197,7 @@ public:
     // IO
     /** Read in MTX file and distribute. */
     void readMTX(void);
-    /** Coalesce to 1 rank and write MTX file. */
+    /** Coalesce and write MTX file. */
     void writeMTX(void);
     /** Read parallel data in poreScale format.  */
     void parRead(void);
@@ -218,7 +218,7 @@ protected:
 };
 
 /** \brief Dense matrix derived class
- * 
+ *
  */
 template <typename T>
 class denseMatrix : public matrix<T>
