@@ -13,6 +13,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "thrust/host_vector.h"
+#include "thrust/device_vector.h"
 
 #include "define.hpp"
 
@@ -47,8 +49,6 @@ public:
   T            height(void) const;
   /** \brief Returns maximum inflow value. */
   T            inflowMax(void) const;
-  /** \brief Returns pointer to voxelGeometry. */
-  psUInt8 *  voxelGeometry(void);
   /** \brief Returns x mesh dimension. */
   psInt      nx(void) const;
   /** \brief Returns y mesh dimension. */
@@ -58,13 +58,15 @@ public:
   /** \brief Returns max iterations allowed in iterative solvers. */
   psInt      solverMaxIterations(void) const;
   /** \brief Returns absolute tolerance for the iterative solver. */
-  T            solverAbsoluteTolerance(void) const;
+  T          solverAbsoluteTolerance(void) const;
   /** \brief Returns relative tolerance for the iterative solver. */
-  T            solverRelativeTolerance(void) const;
+  T          solverRelativeTolerance(void) const;
   /** \brief Returns verbose level for the iterative solver. */
   psInt      solverVerbose(void) const;
   /** \brief Returns reference to the problem path. */
   std::string& problemPath(void);
+  /** \brief Returns pointer to first element of voxelGeometry_. */
+  psUInt8 *  voxelGeometry(void);
   /** \brief Returns id of current pe. */
   psInt      myPe(void) const;
   /** \brief Returns number of processing elements. */
@@ -98,31 +100,35 @@ private:
   void partitionVoxelGeometry_(void);
 
   // Physical information
-  psInt dimension_;                    /**< Specifies if the problem is 2d or 3d. */
-  T     length_;                       /**< Specifies the length of the domain (x-direction). */
-  T     width_;                        /**< Specifies the width of the domain (y-direction). */
-  T     height_;                       /**< Specifies the height of the domain (z-direction). */
-  T     inflowMax_;                    /**< Specifies the maximum inflow velocity. Defaults to 1 */
+  psInt dimension_;                    			/**< Specifies if the problem is 2d or 3d. */
+  T     length_;                       			/**< Specifies the length of the domain (x-direction). */
+  T     width_;                        			/**< Specifies the width of the domain (y-direction). */
+  T     height_;                       			/**< Specifies the height of the domain (z-direction). */
+  T     inflowMax_;                   	 		/**< Specifies the maximum inflow velocity. Defaults to 1 */
 
-  // Mesh information
-  psUInt  *  localGeometryIndex_;        /**< Vector storing indices of voxelGeometry belonging to current PE. */
-  psUInt8 *  voxelGeometry_;             /**< Vector storing a voxel geometry read from the Geometry.dat input file. */
-  psInt      nx_;                        /**< Specifies the x mesh dimension. */
-  psInt      ny_;                        /**< Specifies the y mesh dimension. */
-  psInt      nz_;                        /**< Specifies the z mesh dimension. */
+  // Host Mesh information
+  thrust::host_vector<psInt>	localGeometryIndex_;	/**< Vector storing indices of voxelGeometry belonging to current PE. */
+  thrust::host_vector<psUInt8>  voxelGeometry_;		/**< Vector storing a voxel geometry read from the Geometry.dat input file. */
+  psInt      nx_;                        		/**< Specifies the x mesh dimension. */
+  psInt      ny_;                        		/**< Specifies the y mesh dimension. */
+  psInt      nz_;                        		/**< Specifies the z mesh dimension. */
+
+  // Device Mesh information
+  thrust::device_vector<psUInt8> d_localVoxelGeometry_;	/**< Device vector storing values of voxelGeometry belonging to current PE. */
+  thrust::device_vector<psUInt>  d_localGeometryIndex_;	/**< Device vector storing indices of voxelGeometry belonging to current PE. */
 
   // Solver controls
-  psInt solverMaxIterations_;            /**< Specifies the maximum iterations allowed in iterative solvers. */
-  T     solverAbsoluteTolerance_;        /**< Specifies the absolute error tolerance for iterative solvers. */
-  T     solverRelativeTolerance_;        /**< Specifies the relative error tolerance for iterative solvers. */
-  psInt solverVerbose_;                  /**< Specifies the level of console output produced by iterative solvers. */
+  psInt solverMaxIterations_;            		/**< Specifies the maximum iterations allowed in iterative solvers. */
+  T     solverAbsoluteTolerance_;        		/**< Specifies the absolute error tolerance for iterative solvers. */
+  T     solverRelativeTolerance_;        		/**< Specifies the relative error tolerance for iterative solvers. */
+  psInt solverVerbose_;                  		/**< Specifies the level of console output produced by iterative solvers. */
 
   // Save problem folder
-  std::string problemPath_;              /**< Path to folder containing Geometry.dat and Parameters.dat input files. */
+  std::string problemPath_;              		/**< Path to folder containing Geometry.dat and Parameters.dat input files. */
 
   // NVSHMEM information
-  psInt nPes_;				 /**< Number of NVSHMEM Processing Elements. */
-  psInt myPe_;				 /**< Return ID of current PE. */
+  psInt nPes_;				 		/**< Number of NVSHMEM Processing Elements. */
+  psInt myPe_;				 		/**< Return ID of current PE. */
 
 };
 

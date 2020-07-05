@@ -34,11 +34,7 @@ porescale::parameters<T>::parameters( std::string& problemPath ) : dimension_(0)
 
 //--- Destructor ---//
 template <typename T>
-porescale::parameters<T>::~parameters(void)
-{
-  if (localGeometryIndex_ != NULL) delete [] localGeometryIndex_;
-  if (voxelGeometry_ != NULL) delete [] voxelGeometry_;
-}
+porescale::parameters<T>::~parameters(void) {}
 
 //--- Public Member Functions ---//
 
@@ -72,10 +68,6 @@ T
 porescale::parameters<T>::inflowMax(void) const { return inflowMax_; }
 
 template <typename T>
-psUInt8 *
-porescale::parameters<T>::voxelGeometry(void) { return voxelGeometry_; }
-
-template <typename T>
 psInt
 porescale::parameters<T>::nx(void) const { return nx_; }
 
@@ -106,6 +98,10 @@ porescale::parameters<T>::solverVerbose(void) const { return solverVerbose_; }
 template <typename T>
 std::string&
 porescale::parameters<T>::problemPath(void) { return problemPath_; }
+
+template <typename T>
+psUInt8 *
+porescale::parameters<T>::voxelGeometry(void) { return voxelGeometry_.data(); }
 
 template <typename T>
 psInt
@@ -230,7 +226,7 @@ porescale::parameters<T>::importVoxelGeometry_(
   else dimension_ = 3;
 
   psInt nzFactor = (!nz_) ? 1 : nz_;
-  voxelGeometry_ = new psUInt8[nx_ * ny_ * nzFactor];
+  voxelGeometry_.resize(nx_ * ny_ * nzFactor);
 
   std::string hold;
   // read remaining lines of geometry into parameters file
@@ -282,11 +278,16 @@ void
 porescale::parameters<T>::partitionVoxelGeometry_(void)
 {
 
-  // partition -- determine the voxels that "belong" to this PE, and set up neighbor information.
+  // partition -- determine the voxels that belong to this PE, set up neighbor information, and send data to devices.
 
+  // Special case for single GPU
   if (nPes_ == 1) {
 
+
+    return;
   }
+
+  // Multi-GPU is WIP
 
 }
 
