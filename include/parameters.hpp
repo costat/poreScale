@@ -7,14 +7,11 @@
 #ifndef _PORESCALE_PARAMETERS_H_
 #define _PORESCALE_PARAMETERS_H_
 
-#include <nvshmem.h>
-#include <nvshmemx.h>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "thrust/host_vector.h"
-#include "thrust/device_vector.h"
+#include <vector>
 
 #include "define.hpp"
 
@@ -67,10 +64,6 @@ public:
   std::string& problemPath(void);
   /** \brief Returns pointer to first element of voxelGeometry_. */
   psUInt8 *  voxelGeometry(void);
-  /** \brief Returns id of current pe. */
-  psInt      myPe(void) const;
-  /** \brief Returns number of processing elements. */
-  psInt      nPes(void) const;
 
   /** \brief Prints problem parameters to console. */
   void printParameters(void);
@@ -96,9 +89,6 @@ private:
    */
   void importVoxelGeometry_( std::string& problemPath );
 
-  /** \brief Function to partition voxel data across PEs. */
-  void partitionVoxelGeometry_(void);
-
   // Physical information
   psInt dimension_;                    			/**< Specifies if the problem is 2d or 3d. */
   T     length_;                       			/**< Specifies the length of the domain (x-direction). */
@@ -106,16 +96,11 @@ private:
   T     height_;                       			/**< Specifies the height of the domain (z-direction). */
   T     inflowMax_;                   	 		/**< Specifies the maximum inflow velocity. Defaults to 1 */
 
-  // Host Mesh information
-  thrust::host_vector<psInt>	localGeometryIndex_;	/**< Vector storing indices of voxelGeometry belonging to current PE. */
-  thrust::host_vector<psUInt8>  voxelGeometry_;		/**< Vector storing a voxel geometry read from the Geometry.dat input file. */
+  // Mesh information
+  std::vector<psUInt8>  	voxelGeometry_;		/**< Vector storing a voxel geometry read from the Geometry.dat input file. */
   psInt      nx_;                        		/**< Specifies the x mesh dimension. */
   psInt      ny_;                        		/**< Specifies the y mesh dimension. */
   psInt      nz_;                        		/**< Specifies the z mesh dimension. */
-
-  // Device Mesh information
-  thrust::device_vector<psUInt8> d_localVoxelGeometry_;	/**< Device vector storing values of voxelGeometry belonging to current PE. */
-  thrust::device_vector<psUInt>  d_localGeometryIndex_;	/**< Device vector storing indices of voxelGeometry belonging to current PE. */
 
   // Solver controls
   psInt solverMaxIterations_;            		/**< Specifies the maximum iterations allowed in iterative solvers. */
@@ -125,10 +110,6 @@ private:
 
   // Save problem folder
   std::string problemPath_;              		/**< Path to folder containing Geometry.dat and Parameters.dat input files. */
-
-  // NVSHMEM information
-  psInt nPes_;				 		/**< Number of NVSHMEM Processing Elements. */
-  psInt myPe_;				 		/**< Return ID of current PE. */
 
 };
 

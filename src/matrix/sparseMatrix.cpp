@@ -10,13 +10,13 @@
 template <typename T>
 porescale::sparseMatrix<T>::sparseMatrix(void) :
     porescale::matrix<T>::matrix(), sparseFormat_(CSR),
-    globalNnz_(0), localNnz_(0), colArray_(NULL),
+    nnz_(0), colArray_(NULL),
     rowArray_(NULL), valueArray_(NULL) { };
 
 template <typename T>
 porescale::sparseMatrix<T>::sparseMatrix(parameters<T> * par) :
     porescale::matrix<T>::matrix(par), sparseFormat_(CSR),
-    globalNnz_(0), localNnz_(0), colArray_(NULL),
+    nnz_(0), colArray_(NULL),
     rowArray_(NULL), valueArray_(NULL) { };
 
 //--- Destructor ---//
@@ -36,75 +36,49 @@ template <typename T>
 void
 porescale::sparseMatrix<T>::init(porescale::parameters<T> * par)
 {
-    this->myPe_ = par->myPe();
-    this->nPes_ = par->nPes();
+
 }
 
 template <typename T>
 void
 porescale::sparseMatrix<T>::buildZero(
-    psInt localRows,      psInt globalRows,
-    psInt localColumns,   psInt globalColumns,
-    psInt localNnz,       psInt globalNnz,
+    psInt rows,
+    psInt columns,
+    psInt nnz,
     psSparseFormat format
 )
 {
-    this->setLocalRows(localRows);
-    this->setGlobalRows(globalRows);
-    this->setLocalColumns(localColumns);
-    this->setGlobalColumns(globalColumns);
-    this->setLocalNnz(localNnz);
-    this->setGlobalNnz(globalNnz);
+    this->setRows(rows);
+    this->setColumns(columns);
+    this->setNnz(nnz);
 
     allocateZero();
 }
 
 template <typename T>
 void
-porescale::sparseMatrix<T>::buildPar(
-    psInt   localRows,      psInt            globalRows,
-    psInt   localColumns,   psInt            globalColumns,
-    psInt   localNnz,       psInt            globalNnz,
-    psInt * colArray,       psInt          * rowArray,
-    T     * valueArray,     psSparseFormat   format
+porescale::sparseMatrix<T>::build(
+    psInt   	     rows,
+    psInt   	     columns,
+    psInt   	     nnz,
+    psInt 	   * colArray,
+    psInt 	   * rowArray,
+    T     	   * valueArray,
+    psSparseFormat   format
 )
 {
-    this->setLocalRows(localRows);
-    this->setGlobalRows(globalRows);
-    this->setLocalColumns(localColumns);
-    this->setGlobalColumns(globalColumns);
-    this->setLocalNnz(localNnz);
-    this->setGlobalNnz(globalNnz);
+    this->setRows(rows);
+    this->setColumns(columns);
+    this->setNnz(nnz);
 
     allocate();
 
-    std::copy(colArray, colArray+localNnz, colArray_);
+    std::copy(colArray, colArray+nnz, colArray_);
     if (format == porescale::COO)
-        std::copy(rowArray, rowArray+localNnz, rowArray_);
+        std::copy(rowArray, rowArray+nnz, rowArray_);
     else if (format == porescale::CSR)
-        std::copy(rowArray, rowArray+localRows+1, rowArray_);
-    std::copy(valueArray, valueArray+localNnz, valueArray_);
-}
-
-template <typename T>
-void
-porescale::sparseMatrix<T>::buildSeq(
-    psInt   globalRows,   psInt   globalColumns,
-    psInt   globalNnz,    psInt * colArray,
-    psInt * rowArray,     T     * valueArray,
-    psSparseFormat format
-)
-{
-    this->setGlobalRows(globalRows);
-    this->setGlobalColumns(globalColumns);
-    this->setGlobalNnz(globalNnz);
-
-    // Determine distribution strategy
-
-    // Allocate and set local extents
-
-    // Distribute the data
-
+        std::copy(rowArray, rowArray+rows+1, rowArray_);
+    std::copy(valueArray, valueArray+nnz, valueArray_);
 }
 
 //--- Accessors ---//
@@ -123,21 +97,14 @@ porescale::sparseMatrix<T>::valueArray(void) { return valueArray_; }
 //--- Sets ---//
 template <typename T>
 void
-porescale::sparseMatrix<T>::setLocalNnz(psInt nnzIn) { localNnz_ = nnzIn; }
-
-template <typename T>
-void
-porescale::sparseMatrix<T>::setGlobalNnz(psInt nnzIn) { globalNnz_ = nnzIn; }
+porescale::sparseMatrix<T>::setNnz(psInt nnzIn) { nnz_ = nnzIn; }
 
 //--- Gets ---//
 template <typename T>
 porescale::psSparseFormat porescale::sparseMatrix<T>::sparseFormat(void) const { return sparseFormat_; }
 
 template <typename T>
-psInt porescale::sparseMatrix<T>::globalNnz(void) const { return globalNnz_; }
-
-template <typename T>
-psInt porescale::sparseMatrix<T>::localNnz(void) const { return localNnz_; }
+psInt porescale::sparseMatrix<T>::nnz(void) const { return nnz_; }
 
 //--- Converts ---//
 
@@ -155,15 +122,15 @@ porescale::sparseMatrix<T>::allocate(void)
     }
     if (sparseFormat_ == CSR)
     {
-        colArray_ = new psInt[localNnz_];
-        rowArray_ = new psInt[this->localRows_+1];
-        valueArray_ = new T[localNnz_];
+        colArray_ = new psInt[nnz_];
+        rowArray_ = new psInt[this->rows_+1];
+        valueArray_ = new T[nnz_];
     }
     else if (sparseFormat_ == COO)
     {
-        colArray_ = new psInt[localNnz_];
-        rowArray_ = new psInt[localNnz_];
-        valueArray_ = new T[localNnz_];
+        colArray_ = new psInt[nnz_];
+        rowArray_ = new psInt[nnz_];
+        valueArray_ = new T[nnz_];
     }
 
     this->allocated_ = true;
@@ -180,33 +147,19 @@ porescale::sparseMatrix<T>::allocateZero(void)
 
 template <typename T>
 void
-porescale::sparseMatrix<T>::copyHostToDevice(void)
-{
-
-}
-
-template <typename T>
-void
-porescale::sparseMatrix<T>::copyDeviceToHost(void)
-{
-
-}
-
-template <typename T>
-void
 porescale::sparseMatrix<T>::zero(void)
 {
     if (sparseFormat_ == CSR)
     {
-        for (int i = 0; i < localNnz_; i++) colArray_[i] = 0;
-        for (int i = 0; i < this->localRows_+1; i++) rowArray_[i] = 0;
-        for (int i = 0; i < localNnz_; i++) valueArray_[i] = 0.0;
+        for (int i = 0; i < nnz_; i++) colArray_[i] = 0;
+        for (int i = 0; i < this->rows_+1; i++) rowArray_[i] = 0;
+        for (int i = 0; i < nnz_; i++) valueArray_[i] = 0.0;
     }
     else if (sparseFormat_ == COO)
     {
-        for (int i = 0; i < localNnz_; i++) colArray_[i] = 0;
-        for (int i = 0; i < localNnz_; i++) rowArray_[i] = 0;
-        for (int i = 0; i < localNnz_; i++) valueArray_[i] = 0.0;
+        for (int i = 0; i < nnz_; i++) colArray_[i] = 0;
+        for (int i = 0; i < nnz_; i++) rowArray_[i] = 0;
+        for (int i = 0; i < nnz_; i++) valueArray_[i] = 0.0;
     }
 }
 

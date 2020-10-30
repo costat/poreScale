@@ -10,24 +10,20 @@
 template <typename T>
 porescale::parameters<T>::parameters(void) : dimension_(0), length_(0), width_(0), height_(0),
                                                              inflowMax_(1.0), voxelGeometry_(NULL),
-                                                             localGeometryIndex_(NULL),
                                                              nx_(0), ny_(0), nz_(0),
                                                              solverMaxIterations_(100),
                                                              solverAbsoluteTolerance_(1e-4),
                                                              solverRelativeTolerance_(1e-4),
-                                                             solverVerbose_(1),
-                                                             nPes_(0), myPe_(0) {}
+                                                             solverVerbose_(1) {}
 
 template <typename T>
 porescale::parameters<T>::parameters( std::string& problemPath ) : dimension_(0), length_(0), width_(0), height_(0),
                                                              inflowMax_(1.0), voxelGeometry_(NULL),
-                                                             localGeometryIndex_(NULL),
                                                              nx_(0), ny_(0), nz_(0),
                                                              solverMaxIterations_(100),
                                                              solverAbsoluteTolerance_(1e-4),
                                                              solverRelativeTolerance_(1e-4),
-                                                             solverVerbose_(1),
-                                                             nPes_(0), myPe_(0)
+                                                             solverVerbose_(1)
 {
   initParameters_( problemPath );
 }
@@ -104,18 +100,9 @@ psUInt8 *
 porescale::parameters<T>::voxelGeometry(void) { return voxelGeometry_.data(); }
 
 template <typename T>
-psInt
-porescale::parameters<T>::myPe(void) const { return myPe_; }
-
-template <typename T>
-psInt
-porescale::parameters<T>::nPes(void) const { return nPes_; }
-
-template <typename T>
 void
 porescale::parameters<T>::printParameters(void)
 {
-  std::cout << "Number of NVSHMEM Processing Elements= " << nPes_ << "\n";
   std::cout << "Dimension= " << dimension_ << "\n";
   std::cout << "Geometry length= " << length_ << "\n";
   std::cout << "Geometry width= " << width_ << "\n";
@@ -136,20 +123,12 @@ porescale::parameters<T>::initParameters_(
 )
 {
 
-  // NVSHMEM Setup
-  nPes_ = nvshmem_n_pes();
-  myPe_ = nvshmem_my_pe();
-
   problemPath_ = problemPath;
   std::string Parameters = problemPath_ + "Parameters.dat";
   std::string Geometry = problemPath_ + "Geometry.dat";
 
   loadParameters_(Parameters);
-  // upon exit all PEs own a copy of the imported voxel geometry
   importVoxelGeometry_(Geometry);
-
-  // upon exit each PE knows index of its voxels
-  partitionVoxelGeometry_();
 
 }
 
@@ -264,23 +243,6 @@ porescale::parameters<T>::importVoxelGeometry_(
       }
     }
   }
-
-}
-
-template <typename T>
-void
-porescale::parameters<T>::partitionVoxelGeometry_(void)
-{
-
-  // partition -- determine the voxels that belong to this PE, set up neighbor information, and send data to devices.
-
-  // Special case for single GPU
-  if (nPes_ == 1) {
-    d_localVoxelGeometry_ = voxelGeometry_;
-    return;
-  }
-
-  // Multi-GPU is WIP
 
 }
 
