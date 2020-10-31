@@ -132,10 +132,6 @@ public:
     void readMTX(void);
     /** Coalesce and write MTX file. */
     void writeMTX(void);
-    /** Read parallel data in poreScale format.  */
-    void parRead(void);
-    /** Parallel write to poreScale format files. */
-    void parWrite(void);
 
 protected:
 
