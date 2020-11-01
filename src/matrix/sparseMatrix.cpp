@@ -61,15 +61,13 @@ porescale::sparseMatrix<T>::build(
     this->setRows(rows);
     this->setColumns(columns);
     this->setNnz(nnz);
+    this->setSparseFormat(format);
 
     allocate();
 
-    std::copy(colArray, colArray+nnz, colArray_.data());
-    if (format == porescale::COO)
-        std::copy(std::execution::par_unseq, rowArray, rowArray+nnz, rowArray_.data());
-    else if (format == porescale::CSR)
-        std::copy(std::execution::par_unseq, rowArray, rowArray+rows+1, rowArray_.data());
-    std::copy(valueArray, valueArray+nnz, valueArray_.data());
+    std::copy(std::execution::par_unseq, colArray, colArray+colArray_.size(), colArray_.data());
+    std::copy(std::execution::par_unseq, rowArray, rowArray+rowArray_.size(), rowArray_.data());
+    std::copy(std::execution::par_unseq, valueArray, valueArray+valueArray_.size(), valueArray_.data());
 }
 
 //--- Accessors ---//
