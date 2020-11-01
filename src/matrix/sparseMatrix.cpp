@@ -164,6 +164,19 @@ porescale::sparseMatrix<T>::zero(void)
 }
 
 //--- IO ---//
+template <typename T>
+void
+readMTX(void)
+{
+
+}
+
+template <typename T>
+void
+writeMTX(void)
+{
+
+}
 
 //--- Explicit Instantiations ---//
 template class porescale::sparseMatrix<float>;
