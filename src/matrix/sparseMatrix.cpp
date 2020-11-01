@@ -178,14 +178,59 @@ porescale::sparseMatrix<T>::readMTX(
     colArray_.resize(tmpEntries_);
     valueArray_.resize(tmpEntries_);
 
-    // WIP
+    for (int i = 0; i < nnz(); i++)
+    {
+        matIn >> rowArray_[i] >> colArray_[i] >> valueArray_[i];
+        rowArray_[i]--;
+        colArray_[i]--;
+    }
+    matIn.close();
 
+   // Sort COO
+
+
+    return;
 }
 
 template <typename T>
 void
-writeMTX(void)
+porescale::sparseMatrix<T>::writeMTX(
+    std::string& matrixFile
+)
 {
+    std::ofstream outstream;
+    outstream.open(matrixFile);
+
+    outstream << "%%MatrixMarket coordinate real\n";
+    outstream << "%---------------------------------------------------\n";
+    outstream << "%---------------------------------------------------\n";
+    outstream << this->rows() << " " << this->columns() << " " << this->nnz() << "\n";
+
+    if (this->sparseFormat_ == COO)
+    {
+        for (int i = 0; i < this->nnz_; i++)
+        {
+            outstream << (this->rowArray_[i]+1) << " " << (this->colArray_[i]+1) << " " << this->valueArray_[i] << "\n";
+        }
+    }
+    else if (this->sparseFormat() == CSR)
+    {
+        int rowStart, rowEnd;
+        for (int i = 0; i < this->rows(); i++)
+        {
+            rowStart = this->rowArray_[i];
+            rowEnd = this->rowArray_[i+1];
+            for (int idx = rowStart; idx < rowEnd; idx++)
+            {
+                outstream << (i+1) << " " << (this->colArray_[idx]+1) << " " << this->valueArray_[idx] << "\n";
+            }
+        }
+    }
+    else
+    {
+        outstream << "PS ERROR : Unsupported matrix format in writeMtx.\n";
+    }
+    outstream.close();
 
 }
 

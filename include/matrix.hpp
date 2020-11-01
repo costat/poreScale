@@ -135,7 +135,7 @@ public:
     /** Read in MTX file and distribute. */
     void readMTX(std::string& matrixFile);
     /** Coalesce and write MTX file. */
-    void writeMTX(void);
+    void writeMTX(std::string& matrixFile);
 
 protected:
 
