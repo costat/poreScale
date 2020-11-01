@@ -16,17 +16,13 @@ template <typename T>
 porescale::matrix<T>::matrix(porescale::parameters<T> * par) :
     rows_(0), columns_(0),
     allocated_(false)
-{
-
-}
+{ }
 
 //--- Init ---//
 template <typename T>
 void
 porescale::matrix<T>::init(parameters<T> * par)
-{
-
-}
+{ }
 
 //--- Sets ---//
 template <typename T>
