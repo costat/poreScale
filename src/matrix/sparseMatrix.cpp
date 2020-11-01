@@ -21,15 +21,7 @@ porescale::sparseMatrix<T>::sparseMatrix(parameters<T> * par) :
 
 //--- Destructor ---//
 template <typename T>
-porescale::sparseMatrix<T>::~sparseMatrix(void)
-{
-    if (this->allocated_)
-    {
-        delete[] colArray_;
-        delete[] rowArray_;
-        delete[] valueArray_;
-    }
-}
+porescale::sparseMatrix<T>::~sparseMatrix(void) {}
 
 //--- Initiation and build ---//
 template <typename T>
@@ -51,6 +43,7 @@ porescale::sparseMatrix<T>::buildZero(
     this->setRows(rows);
     this->setColumns(columns);
     this->setNnz(nnz);
+    this->setSparseFormat(format);
 
     allocateZero();
 }
@@ -73,31 +66,35 @@ porescale::sparseMatrix<T>::build(
 
     allocate();
 
-    std::copy(colArray, colArray+nnz, colArray_);
+    std::copy(colArray, colArray+nnz, colArray_.data());
     if (format == porescale::COO)
-        std::copy(rowArray, rowArray+nnz, rowArray_);
+        std::copy(rowArray, rowArray+nnz, rowArray_.data());
     else if (format == porescale::CSR)
-        std::copy(rowArray, rowArray+rows+1, rowArray_);
-    std::copy(valueArray, valueArray+nnz, valueArray_);
+        std::copy(rowArray, rowArray+rows+1, rowArray_.data());
+    std::copy(valueArray, valueArray+nnz, valueArray_.data());
 }
 
 //--- Accessors ---//
 template <typename T>
 psInt *
-porescale::sparseMatrix<T>::columnArray(void) { return colArray_; }
+porescale::sparseMatrix<T>::columnArray(void) { return colArray_.data(); }
 
 template <typename T>
 psInt *
-porescale::sparseMatrix<T>::rowArray(void) { return rowArray_; }
+porescale::sparseMatrix<T>::rowArray(void) { return rowArray_.data(); }
 
 template <typename T>
 T *
-porescale::sparseMatrix<T>::valueArray(void) { return valueArray_; }
+porescale::sparseMatrix<T>::valueArray(void) { return valueArray_.data(); }
 
 //--- Sets ---//
 template <typename T>
 void
 porescale::sparseMatrix<T>::setNnz(psInt nnzIn) { nnz_ = nnzIn; }
+
+template <typename T>
+void
+porescale::sparseMatrix<T>::setSparseFormat(psSparseFormat format) { sparseFormat_ = format; }
 
 //--- Gets ---//
 template <typename T>
@@ -114,23 +111,17 @@ void
 porescale::sparseMatrix<T>::allocate(void)
 {
 
-    if (this->allocated_)
-    {
-        delete[] colArray_;
-        delete[] rowArray_;
-        delete[] valueArray_;
-    }
     if (sparseFormat_ == CSR)
     {
-        colArray_ = new psInt[nnz_];
-        rowArray_ = new psInt[this->rows_+1];
-        valueArray_ = new T[nnz_];
+        colArray_.resize(nnz_);
+        rowArray_.resize(this->rows_+1);
+        valueArray_.resize(nnz_);
     }
     else if (sparseFormat_ == COO)
     {
-        colArray_ = new psInt[nnz_];
-        rowArray_ = new psInt[nnz_];
-        valueArray_ = new T[nnz_];
+        colArray_.resize(nnz_);
+        rowArray_.resize(nnz_);
+        valueArray_.resize(nnz_);
     }
 
     this->allocated_ = true;
@@ -166,8 +157,28 @@ porescale::sparseMatrix<T>::zero(void)
 //--- IO ---//
 template <typename T>
 void
-readMTX(void)
+porescale::sparseMatrix<T>::readMTX(
+    std::string& matrixFile
+)
 {
+    psUInt tmpRows_, tmpCols_, tmpEntries_;
+
+    std::ifstream matIn(matrixFile.c_str());
+
+    // parse through comments
+    while (matIn.peek() == '%') matIn.ignore(2048, '\n');
+
+    // grab dimension
+    matIn >> tmpRows_ >> tmpCols_ >> tmpEntries_;
+    this->setRows(tmpRows_);
+    this->setColumns(tmpCols_);
+    this->setNnz(tmpEntries_);
+    diagIdx_.resize(tmpRows_);
+    rowArray_.resize(tmpEntries_);
+    colArray_.resize(tmpEntries_);
+    valueArray_.resize(tmpEntries_);
+
+    // WIP
 
 }
 

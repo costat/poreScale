@@ -9,6 +9,7 @@
 
 #include "parameters.hpp"
 #include "types.hpp"
+#include "define.hpp"
 
 namespace porescale
 {
@@ -106,6 +107,9 @@ public:
     /** \brief Set the number of nonzeros. */
     void          setNnz(psInt nnzIn);
 
+    /** \brief Set the sparse format of the matrix. */
+    void          setSparseFormat(psSparseFormat format);
+
     // Gets
     /** \brief Return the sparse format. */
     psSparseFormat sparseFormat(void) const;
@@ -129,7 +133,7 @@ public:
 
     // IO
     /** Read in MTX file and distribute. */
-    void readMTX(void);
+    void readMTX(std::string& matrixFile);
     /** Coalesce and write MTX file. */
     void writeMTX(void);
 
@@ -139,9 +143,10 @@ protected:
     psInt          nnz_;      	    /**< Number of nonzeros. */
 
     // host data
-    psInt * colArray_;              /**< Column array. */
-    psInt * rowArray_;              /**< Row array. */
-    T     * valueArray_;            /**< Value array. */
+    std::vector<psInt> colArray_;   /**< Column array. */
+    std::vector<psInt> rowArray_;   /**< Row array. */
+    std::vector<psInt> diagIdx_;    /**< Store indices of diagonal elements. */
+    std::vector<T>     valueArray_; /**< Value array. */
 
 };
 
