@@ -10,13 +10,13 @@
 template <typename T>
 porescale::sparseMatrix<T>::sparseMatrix(void) :
     porescale::matrix<T>::matrix(), sparseFormat_(CSR),
-    nnz_(0), colArray_(NULL),
+    nnz_(0), sorted_(0), colArray_(NULL),
     rowArray_(NULL), valueArray_(NULL) { };
 
 template <typename T>
 porescale::sparseMatrix<T>::sparseMatrix(parameters<T> * par) :
     porescale::matrix<T>::matrix(par), sparseFormat_(CSR),
-    nnz_(0), colArray_(NULL),
+    nnz_(0), sorted_(0), colArray_(NULL),
     rowArray_(NULL), valueArray_(NULL) { };
 
 //--- Destructor ---//
