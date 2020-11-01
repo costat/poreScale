@@ -27,9 +27,7 @@ porescale::sparseMatrix<T>::~sparseMatrix(void) {}
 template <typename T>
 void
 porescale::sparseMatrix<T>::init(porescale::parameters<T> * par)
-{
-
-}
+{ }
 
 template <typename T>
 void
@@ -68,9 +66,9 @@ porescale::sparseMatrix<T>::build(
 
     std::copy(colArray, colArray+nnz, colArray_.data());
     if (format == porescale::COO)
-        std::copy(rowArray, rowArray+nnz, rowArray_.data());
+        std::copy(std::execution::par_unseq, rowArray, rowArray+nnz, rowArray_.data());
     else if (format == porescale::CSR)
-        std::copy(rowArray, rowArray+rows+1, rowArray_.data());
+        std::copy(std::execution::par_unseq, rowArray, rowArray+rows+1, rowArray_.data());
     std::copy(valueArray, valueArray+nnz, valueArray_.data());
 }
 
@@ -96,12 +94,19 @@ template <typename T>
 void
 porescale::sparseMatrix<T>::setSparseFormat(psSparseFormat format) { sparseFormat_ = format; }
 
+template <typename T>
+void
+porescale::sparseMatrix<T>::setSorted(bool sorted) { sorted_ = sorted; }
+
 //--- Gets ---//
 template <typename T>
 porescale::psSparseFormat porescale::sparseMatrix<T>::sparseFormat(void) const { return sparseFormat_; }
 
 template <typename T>
 psInt porescale::sparseMatrix<T>::nnz(void) const { return nnz_; }
+
+template <typename T>
+bool porescale::sparseMatrix<T>::sorted(void) const {return sorted_; }
 
 //--- Converts ---//
 
@@ -140,18 +145,9 @@ template <typename T>
 void
 porescale::sparseMatrix<T>::zero(void)
 {
-    if (sparseFormat_ == CSR)
-    {
-        for (int i = 0; i < nnz_; i++) colArray_[i] = 0;
-        for (int i = 0; i < this->rows_+1; i++) rowArray_[i] = 0;
-        for (int i = 0; i < nnz_; i++) valueArray_[i] = 0.0;
-    }
-    else if (sparseFormat_ == COO)
-    {
-        for (int i = 0; i < nnz_; i++) colArray_[i] = 0;
-        for (int i = 0; i < nnz_; i++) rowArray_[i] = 0;
-        for (int i = 0; i < nnz_; i++) valueArray_[i] = 0.0;
-    }
+    std::fill(std::execution::par_unseq, colArray_.begin(), colArray_.end(), 0);
+    std::fill(std::execution::par_unseq, rowArray_.begin(), rowArray_.end(), 0);
+    std::fill(std::execution::par_unseq, valueArray_.begin(), valueArray_.end(), 0);
 }
 
 //--- IO ---//
@@ -187,7 +183,7 @@ porescale::sparseMatrix<T>::readMTX(
     matIn.close();
 
    // Sort COO
-
+    sortCOO();
 
     return;
 }
@@ -232,6 +228,37 @@ porescale::sparseMatrix<T>::writeMTX(
     }
     outstream.close();
 
+}
+
+// Manipulation
+template <typename T>
+void
+porescale::sparseMatrix<T>::sortCOO()
+{
+    if (sparseFormat() != COO) return;
+
+    std::vector<porescale::arrayCOO<T>> tempCOO(nnz());
+
+    for (int i = 0; i < nnz(); i++)
+    {
+        tempCOO[i].i_index = rowArray_[i];
+        tempCOO[i].j_index = colArray_[i];
+        tempCOO[i].value = valueArray_[i];
+    }
+
+    sortCOObyIbyJ<T> sortStruct;
+    std::sort(std::execution::par_unseq, tempCOO.begin(), tempCOO.end(), sortStruct);
+
+    for (int i = 0; i < nnz(); i++)
+    {
+        rowArray_[i] = tempCOO[i].i_index;
+        colArray_[i] = tempCOO[i].j_index;
+        valueArray_[i] = tempCOO[i].value;
+    }
+
+    this->sorted_ = 1;
+
+    return;
 }
 
 //--- Explicit Instantiations ---//

@@ -43,7 +43,7 @@ struct face
   psInt_t bctype;                                     /**< In specifying the boundary type for the face. 0: interior, 1: dirichlet, 2: neumann. */
 };
 
-/** \brief Hexahedral or quadrilateral cell struct 
+/** \brief Hexahedral or quadrilateral cell struct
  *
  */
 template <typename T>
@@ -106,6 +106,21 @@ typedef enum
   COO,
   CSR
 } psSparseFormat;
+
+/** \brief Sort struct for COO matrices. */
+template <typename T>
+struct sortCOObyIbyJ
+{
+    bool operator()(
+        arrayCOO<T> const &one,
+        arrayCOO<T> const &two
+    )
+    {
+        return ( one.i_index < two.i_index ||
+                 (one.i_index == two.i_index &&
+                  one.j_index < two.j_index) );
+    }
+};
 
 }
 

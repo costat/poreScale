@@ -109,12 +109,16 @@ public:
 
     /** \brief Set the sparse format of the matrix. */
     void          setSparseFormat(psSparseFormat format);
+    /** \brief Set if sorted. */
+    void          setSorted(bool sorted);
 
     // Gets
     /** \brief Return the sparse format. */
     psSparseFormat sparseFormat(void) const;
     /** \brief Return the number of nonzeros. */
     psInt          nnz(void) const;
+    /** \brief Return sorted state. */
+    bool 	   sorted(void) const;
 
     // Converts
 
@@ -137,6 +141,9 @@ public:
     /** Coalesce and write MTX file. */
     void writeMTX(std::string& matrixFile);
 
+    // Manipulation
+    void sortCOO(void);
+
 protected:
 
     psSparseFormat sparseFormat_;   /**< Tracks the sparse matrix format. */
@@ -148,6 +155,7 @@ protected:
     std::vector<psInt> diagIdx_;    /**< Store indices of diagonal elements. */
     std::vector<T>     valueArray_; /**< Value array. */
 
+    bool sorted_;
 };
 
 /** \brief Dense matrix derived class
