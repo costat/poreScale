@@ -6,6 +6,7 @@
 #include "parameters.hpp"
 #include "mesh.hpp"
 #include "matrix.hpp"
+#include "bla.hpp"
 #include "solve.hpp"
 #include "models.hpp"
 
