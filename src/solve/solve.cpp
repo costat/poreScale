@@ -10,10 +10,10 @@
 
 //--- Constructors ---//
 template <typename T>
-porescale::solver<T>::solver(void) : assembled_(false), verbose_(1) { }
+porescale::solver<T>::solver(void) : assembled_(false), verbose_(1), matrix_(NULL), preconditioner_(NULL) { }
 
 template <typename T>
-porescale::solver<T>::solver(porescale::parameters<T> * par) : assembled_(false), verbose_(1) { }
+porescale::solver<T>::solver(porescale::parameters<T> * par) : assembled_(false), verbose_(1), matrix_(NULL), preconditioner_(NULL) { }
 
 
 //--- Sets ---//
