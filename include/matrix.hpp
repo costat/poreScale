@@ -167,9 +167,6 @@ class denseMatrix : public matrix<T>
 
 };
 
-template <typename T>
-using vector = std::vector<T>;
-
 }
 
 #endif

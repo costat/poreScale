@@ -47,7 +47,7 @@ namespace porescale
     bool assembled(void) const;
 
     /** \brief Pure virtual solve function. Defined in derived solvers. */
-    virtual void solve(porescale::vector<T>& rhs, porescale::vector<T>& sol) = 0;
+    virtual void solve(std::vector<T>& rhs, std::vector<T>& sol) = 0;
 
   protected:
 
@@ -100,7 +100,7 @@ namespace porescale
     void setup(psUInt maxIt, T absTolIn, T relTolIn);
 
     /** Solve the system. */
-    void solve(porescale::vector<T>& rhs, porescale::vector<T>* sol);
+    void solve(std::vector<T>& rhs, std::vector<T>* sol);
 
     /** Set the preconditioner. */
     void setPreconditioner(porescale::solver<T>& preconditioner);
@@ -116,14 +116,14 @@ namespace porescale
     T       currentResidual_;
 
     /** \brief Pure abstract function to solve with no preconditioner. */
-    virtual void solveNoPreconditioner(porescale::vector<T>& rhs, porescale::vector<T>* sol) = 0;
+    virtual void solveNoPreconditioner(std::vector<T>& rhs, std::vector<T>* sol) = 0;
     /** \brief Pure abstract function to solve with preconditioner. */
-    virtual void solvePreconditioner(porescale::vector<T>& rhs, porescale::vector<T>* sol) = 0;
+    virtual void solvePreconditioner(std::vector<T>& rhs, std::vector<T>* sol) = 0;
 
     /** \brief Compute the residual. */
-    void residualCheck(porescale::vector<T>& rhs, porescale::vector<T>* sol);
+    void residualCheck(std::vector<T>& rhs, std::vector<T>* sol);
      /** \brief Scratch vector for storing residual calculations. */
-    porescale::vector<T> residualVec_;
+    std::vector<T> residualVec_;
 
   };
 
@@ -155,9 +155,9 @@ namespace porescale
     /** \brief Scratch vectors used in CG iterations. */
     std::vector<T> r_, w_, p_, tmp_;
     /** \brief Function to solve with preconditioner. Called by inherited solve function. */
-    void solvePreconditioner(porescale::vector<T>& rhs, porescale::vector<T> *sol);
+    void solvePreconditioner(std::vector<T>& rhs, std::vector<T> *sol);
     /** \brief Function to solve with no preconditioner. Called by inherited solve function. */
-    void solveNoPreconditioner(porescale::vector<T>& rhs, porescale::vector<T> *sol);
+    void solveNoPreconditioner(std::vector<T>& rhs, std::vector<T> *sol);
 
   };
 

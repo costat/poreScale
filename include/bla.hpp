@@ -18,14 +18,14 @@ namespace porescale {
  *          where A is a vector, and result is a float of type T.
 */
 template <typename T>
-void norm(porescale::vector<T>& A, T& result);
+void norm(std::vector<T>& A, T& result);
 
 /** \brief Performs the operation
  *          Y = alpha * X + Y
  *         where X and Y are vectors and alpha is a float of type T.
  */
 template <typename T>
-void axpy(T alpha, porescale::vector<T>& X, porescale::vector<T>& Y);
+void axpy(T alpha, std::vector<T>& X, std::vector<T>& Y);
 
 //--- SPARSE BLAS ---//
 //--- L2 BLAS ---//
@@ -35,7 +35,7 @@ void axpy(T alpha, porescale::vector<T>& X, porescale::vector<T>& Y);
  *          where A is a sparse matrix, B and C are vectors, and alpha and beta are floats of type T.
  */
 template <typename T>
-void sparseMatvec(T alpha, porescale::sparseMatrix<T>& A, porescale::vector<T>& B, T beta, porescale::vector<T>& C);
+void sparseMatvec(T alpha, porescale::sparseMatrix<T>& A, std::vector<T>& B, T beta, std::vector<T>& C);
 
 
 } // namespace porescale

@@ -83,8 +83,7 @@ template class porescale::edge<double>;
 
 //--- Constructors and Destructors ---//
 template <typename T>
-porescale::face<T>::face() : vertices_(NULL), edges_(NULL),
-                             area_(0.0), nEdges_(0), nVertices_(0) { }
+porescale::face<T>::face() : area_(0.0), nEdges_(0), nVertices_(0) { }
 
 template <typename T>
 porescale::face<T>::face(
@@ -237,7 +236,7 @@ porescale::face<T>::computeArea_(void)
 
     }
     else if (nEdges_ == 4) {
-
+/* WIP
         // Find two non-adjacent vertices
         porescale::vertex<T> *A, *C;
         porescale::edge<T> *a, *b, *c, *d;
@@ -253,7 +252,7 @@ porescale::face<T>::computeArea_(void)
         // Compute angles
 
         // Compute area
-
+*/
 
 
     }

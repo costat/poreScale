@@ -11,7 +11,7 @@
 template <typename T>
 void
 porescale::norm(
-    porescale::vector<T>& A,
+    std::vector<T>& A,
     T&                    result
 )
 {
@@ -30,8 +30,8 @@ template <typename T>
 void
 porescale::axpy(
     T                     alpha,
-    porescale::vector<T>& X,
-    porescale::vector<T>& Y
+    std::vector<T>& X,
+    std::vector<T>& Y
 )
 {
 
@@ -51,9 +51,9 @@ void
 porescale::sparseMatvec(
     T                           alpha,
     porescale::sparseMatrix<T>& A,
-    porescale::vector<T>&       B,
+    std::vector<T>&             B,
     T                           beta,
-    porescale::vector<T>&       C
+    std::vector<T>&             C
 )
 {
 

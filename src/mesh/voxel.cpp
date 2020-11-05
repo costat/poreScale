@@ -7,7 +7,7 @@
 #include "mesh.hpp"
 
 //--- Constructor --//
-template <typename T> 
+template <typename T>
 porescale::voxel<T>::voxel(void) : mesh<T>() { }
 
 template <typename T>
@@ -176,9 +176,9 @@ porescale::voxel<T>::checkSanity(void)
   if (totalChanged) {
     std::cout << "\nWarning, input geometry was not sane.\n";
     std::cout << totalChanged << " cells, representing ";
-    if (this->par_->dimension() == 3) 
+    if (this->par_->dimension() == 3)
       std::cout << (T)100 * totalChanged / (nx * ny * nz);
-    else 
+    else
       std::cout << (T)100 * totalChanged / (nx * ny);
     std::cout << "% of the input geometry, with boundaries on opposite cell faces \n";
     std::cout << "were found and removed from void space.\n";
@@ -198,8 +198,10 @@ template <typename T>
 void
 porescale::voxel<T>::build2d_(void)
 {
+/*
   T dx = (T)this->par_->length();
   T dy = (T)this->par_->width();
+*/
 
 }
 

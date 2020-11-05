@@ -132,8 +132,8 @@ porescale::iterativeSolver<T>::setPreconditioner(
 template <typename T>
 void
 porescale::iterativeSolver<T>::solve(
-    porescale::vector<T>&  rhs,
-    porescale::vector<T> * sol
+    std::vector<T>&  rhs,
+    std::vector<T> * sol
 )
 {
     if (this->preconditioner_ == nullptr)
@@ -146,8 +146,8 @@ porescale::iterativeSolver<T>::solve(
 template <typename T>
 void
 porescale::iterativeSolver<T>::residualCheck(
-    porescale::vector<T>& rhs,
-    porescale::vector<T>* sol
+    std::vector<T>& rhs,
+    std::vector<T>* sol
 )
 {
     T one = 1.0;

@@ -9,7 +9,7 @@
 //--- Constructors ---//
 template <typename T>
 porescale::parameters<T>::parameters(void) : dimension_(0), length_(0), width_(0), height_(0),
-                                                             inflowMax_(1.0), voxelGeometry_(NULL),
+                                                             inflowMax_(1.0),
                                                              nx_(0), ny_(0), nz_(0),
                                                              solverMaxIterations_(100),
                                                              solverAbsoluteTolerance_(1e-4),
@@ -18,7 +18,7 @@ porescale::parameters<T>::parameters(void) : dimension_(0), length_(0), width_(0
 
 template <typename T>
 porescale::parameters<T>::parameters( std::string& problemPath ) : dimension_(0), length_(0), width_(0), height_(0),
-                                                             inflowMax_(1.0), voxelGeometry_(NULL),
+                                                             inflowMax_(1.0),
                                                              nx_(0), ny_(0), nz_(0),
                                                              solverMaxIterations_(100),
                                                              solverAbsoluteTolerance_(1e-4),
