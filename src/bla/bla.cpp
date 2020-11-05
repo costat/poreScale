@@ -17,11 +17,10 @@ porescale::norm(
 {
 
     result = std::transform_reduce(
-                 std::execution::par_unseq,
-                 A.begin(), A.end(),
+                 std::execution::par_unseq, A.begin(), A.end(),
                  [=](T A) { return A * A; },
-                 0.0,
-                 std::plus());
+                 0.0, std::plus()
+             );
     result = std::sqrt(result);
 
     return;
@@ -38,9 +37,7 @@ porescale::axpy(
 
     std::transform(
         std::execution::par_unseq, X.begin(), X.end(), Y.begin(), Y.begin(),
-        [=](T X, T Y) {
-            return Y + alpha * X;
-        }
+        [=](T X, T Y) { return Y + alpha * X; }
     );
 
     return;
@@ -60,5 +57,12 @@ porescale::sparseMatvec(
 )
 {
 
+    // Check matrix format
+    if (A.sparseFormat == porescale::COO) {
+
+    } else if (A.sparseFormat == porescale::CSR) {
+
+    } else
+        // error out
     return;
 }
