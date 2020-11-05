@@ -10,7 +10,25 @@
 
 //--- Constructors ---//
 template <typename T>
-porescale::solver<T>::solver(void) : assembled_(false) { }
+porescale::solver<T>::solver(void) : assembled_(false), verbose_(1) { }
+
+template <typename T>
+porescale::solver<T>::solver(porescale::parameters<T> * par) : assembled_(false), verbose_(1) { }
+
+
+//--- Sets ---//
+template <typename T>
+void
+porescale::solver<T>::setVerbose(psUInt verbose) { verbose_ = verbose; }
+
+template <typename T>
+void
+porescale::solver<T>::setAssembled(bool assembled) { assembled_ = assembled; }
+
+//--- Gets ---//
+template <typename T>
+bool
+porescale::solver<T>::assembled(void) const { return assembled_; }
 
 //--- Explicit Instantiations ---//
 template class porescale::solver<float>;
@@ -25,7 +43,7 @@ porescale::iterativeSolver<T>::iterativeSolver(void) : solver<T>::solver(),
 { };
 
 template <typename T>
-porescale::iterativeSolver<T>::iterativeSolver(parameters<T> * par) : solver<T>::solver(),
+porescale::iterativeSolver<T>::iterativeSolver(parameters<T> * par) : solver<T>::solver(par),
     checkResidual_(true), minIterations_(0),
     initialResidual_(-1), currentResidual_(-1)
 {
@@ -46,6 +64,10 @@ porescale::iterativeSolver<T>::minIterations(void) const { return minIterations_
 template <typename T>
 psInt
 porescale::iterativeSolver<T>::maxIterations(void) const { return maxIterations_; }
+
+template <typename T>
+psInt
+porescale::iterativeSolver<T>::iterations(void) const { return iterations_; }
 
 template <typename T>
 T
@@ -83,6 +105,64 @@ porescale::iterativeSolver<T>::setRelativeTolerance(T relativeTolerance) { relat
 template< typename T>
 void
 porescale::iterativeSolver<T>::setAbsoluteTolerance(T absoluteTolerance) { absoluteTolerance_ = absoluteTolerance; }
+
+//--- Setup and Solve ---//
+template <typename T>
+void
+porescale::iterativeSolver<T>::setup(
+    psUInt maxIt,
+    T      absTolIn,
+    T      relTolIn
+)
+{
+    setMaxIterations(maxIt);
+    setAbsoluteTolerance(absTolIn);
+    setRelativeTolerance(relTolIn);
+}
+
+template <typename T>
+void
+porescale::iterativeSolver<T>::setPreconditioner(
+    porescale::solver<T>& preconditioner
+)
+{
+    this->preconditioner_ = &preconditioner;
+}
+
+template <typename T>
+void
+porescale::iterativeSolver<T>::solve(
+    porescale::vector<T>&  rhs,
+    porescale::vector<T> * sol
+)
+{
+    if (this->preconditioner_ == nullptr)
+        this->solveNoPreconditioner(rhs, sol);
+    else
+        this->solvePreconditioner(rhs, sol);
+    return;
+}
+
+template <typename T>
+void
+porescale::iterativeSolver<T>::residualCheck(
+    porescale::vector<T>& rhs,
+    porescale::vector<T>* sol
+)
+{
+    T one = 1.0;
+    T zero = 0.0;
+
+/** need to define vector
+    if (residualVec_.rows() != rhs.rows())
+        residualVec_.init(rhs.rows());
+*/
+/** need to define linear algebra
+    porescale::sparseMatvec(-one, *matrix_, sol, zero, residualVec_);
+    porescale::axpy(one, rhs, residualVec_);
+    porescale::norm(residualVec_, currentRes_);
+**/
+}
 
 //--- Explicit Instantiations ---//
 template class porescale::iterativeSolver<float>;

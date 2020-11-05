@@ -24,6 +24,9 @@ namespace porescale
     /** \brief Default constructor. */
     solver(void);
 
+    /** \brief Construct from parameters. */
+    solver(porescale::parameters<T> * par);
+
     /** \brief Init from parameters. */
     virtual void init(parameters<T> * par) = 0;
 
@@ -119,7 +122,7 @@ namespace porescale
     /** \brief Compute the residual. */
     void residualCheck(porescale::vector<T>& rhs, porescale::vector<T>* sol);
      /** \brief Scratch vector for storing residual calculations. */
-    std::vector<T> residualVec_;
+    // need to define vector porescale::vector<T> residualVec_;
 
   };
 
