@@ -22,13 +22,21 @@ porescale::norm(
 template <typename T>
 void
 porescale::axpy(
-    T                     norm,
+    T                     alpha,
     porescale::vector<T>& X,
     porescale::vector<T>& Y
 )
 {
 
+    std::transform(
+        std::execution::par_unseq, X.begin(), X.end(), Y.begin(), Y.begin(),
+        [=](T X, T Y) {
+            return Y + alpha * X;
+        }
+    );
+
     return;
+
 }
 
 //---SPARSE LINEAR ALGEBRA ---//

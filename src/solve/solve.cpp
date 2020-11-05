@@ -153,15 +153,12 @@ porescale::iterativeSolver<T>::residualCheck(
     T one = 1.0;
     T zero = 0.0;
 
-/** need to define vector
-    if (residualVec_.rows() != rhs.rows())
-        residualVec_.init(rhs.rows());
-*/
-/** need to define linear algebra
-    porescale::sparseMatvec(-one, *matrix_, sol, zero, residualVec_);
+    if (residualVec_.size() != rhs.size())
+        residualVec_.resize(rhs.size());
+
+    porescale::sparseMatvec(-one, *this->matrix_, *sol, zero, residualVec_);
     porescale::axpy(one, rhs, residualVec_);
-    porescale::norm(residualVec_, currentRes_);
-**/
+    porescale::norm(residualVec_, currentResidual_);
 }
 
 //--- Explicit Instantiations ---//

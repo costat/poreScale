@@ -168,11 +168,7 @@ class denseMatrix : public matrix<T>
 };
 
 template <typename T>
-/** \brief Vector derived class */
-class vector : public denseMatrix<T>
-{
-
-};
+using vector = std::vector<T>;
 
 }
 

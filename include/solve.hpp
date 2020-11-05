@@ -123,7 +123,7 @@ namespace porescale
     /** \brief Compute the residual. */
     void residualCheck(porescale::vector<T>& rhs, porescale::vector<T>* sol);
      /** \brief Scratch vector for storing residual calculations. */
-    // need to define vector porescale::vector<T> residualVec_;
+    porescale::vector<T> residualVec_;
 
   };
 
