@@ -28,7 +28,7 @@ namespace porescale
     virtual void init(parameters<T> * par) = 0;
 
     /** \brief Abstract solver build function. */
-    virtual void build(void) = 0;
+    virtual void assemble(void) = 0;
 
     /** \brief Set the solver matrix. */
     virtual void setMatrix(porescale::sparseMatrix<T>& matrix) = 0;
@@ -39,12 +39,15 @@ namespace porescale
     /** \brief Set if solver is assembled. */
     void setAssembled(bool);
 
+    /** \brief Return true if the solver has been assembled. Else return 0. */
+    bool assembled(void) const;
+
     /** \brief Pure virtual solve function. Defined in derived solvers. */
     virtual void solve(porescale::vector<T>& rhs, porescale::vector<T>& sol) = 0;
 
   protected:
 
-    bool built_;                /**< Flag determining if solver has been built. */
+    bool assembled_;		/**< Flag determining if solver has been assembled. */
     psUInt verbose_;		/**< How verbose should solver printing be. */
 
     /** \brief Pointer to the solver matrix. */
@@ -68,9 +71,6 @@ namespace porescale
 
     /** \brief Init from parameters. */
     virtual void init(parameters<T> * par) = 0;
-
-    /** \brief Abstract solver build function. */
-    virtual void build(void) = 0;
 
     /** Gets */
     bool    checkResidual(void) const;			/** Check if residual check is enabled. */
@@ -121,7 +121,6 @@ namespace porescale
      /** \brief Scratch vector for storing residual calculations. */
     std::vector<T> residualVec_;
 
-
   };
 
   /** \brief CG solver derived class.
@@ -141,6 +140,20 @@ namespace porescale
 
     /** \brief Solver build function. */
     virtual void build(void);
+
+    /** \brief Sets pointer to matrix in linear system to be solved. */
+    void setMatrix(porescale::sparseMatrix<T>& matrix);
+
+    /** \brief Disabled assemble function. No assemble necessary for CG. */
+    void assemble(void);
+
+    private:
+    /** \brief Scratch vectors used in CG iterations. */
+    std::vector<T> r_, w_, p_, tmp_;
+    /** \brief Function to solve with preconditioner. Called by inherited solve function. */
+    void solvePreconditioner(porescale::vector<T>& rhs, porescale::vector<T> *sol);
+    /** \brief Function to solve with no preconditioner. Called by inherited solve function. */
+    void solveNoPreconditioner(porescale::vector<T>& rhs, porescale::vector<T> *sol);
 
   };
 
