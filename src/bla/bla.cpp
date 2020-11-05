@@ -16,6 +16,14 @@ porescale::norm(
 )
 {
 
+    result = std::transform_reduce(
+                 std::execution::par_unseq,
+                 A.begin(), A.end(),
+                 [=](T A) { return A * A; },
+                 0.0,
+                 std::plus());
+    result = std::sqrt(result);
+
     return;
 }
 
