@@ -10,9 +10,9 @@
 //--- L1 BLAS ---//
 template <typename T>
 void
-porescale::norm<T>(
-    porescale::vector& A,
-    T&                 result
+porescale::norm(
+    porescale::vector<T>& A,
+    T&                    result
 )
 {
 
@@ -21,7 +21,7 @@ porescale::norm<T>(
 
 template <typename T>
 void
-porescale::axpy<T>(
+porescale::axpy(
     T                     norm,
     porescale::vector<T>& X,
     porescale::vector<T>& Y
@@ -35,7 +35,7 @@ porescale::axpy<T>(
 //--- L2 BLAS ---//
 template <typename T>
 void
-porescale::sparseMatvec<T>(
+porescale::sparseMatvec(
     T                           alpha,
     porescale::sparseMatrix<T>& A,
     porescale::vector<T>&       B,
