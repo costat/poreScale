@@ -4,10 +4,11 @@
    where N is the size of the arrays.
 */
 
-#include "../util/printDeviceProp.hpp"
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <iterator>
+#include <functional>
 #include <iostream>
 #include <stdlib.h>
 #include <chrono>
@@ -22,32 +23,47 @@
   #define float_type float
 #endif
 
+#define errTol 1e-8
+
+void
+naiveAxpy(float_type alpha, std::vector<float_type>& A, std::vector<float_type>& B)
+{
+  for (int i = 0; i < (int)A.size(); i++) {
+    B[i] += alpha * A[i];
+  }
+}
+
 int
 main( int argc, const char* argv[] )
 {
 
-
-  cudaSetDevice(0);
-
-  int devCount;
-  cudaGetDeviceCount(&devCount);
-
-  std::cout << "There are " << devCount << " CUDA devices.\n";
-
-  for (int i = 0; i < devCount; ++i) {
-    std::cout << "------------ Device " << i << " ------------\n";
-    cudaDeviceProp devProp;
-    cudaGetDeviceProperties(&devProp, i);
-    printDevProp(devProp);
-    std::cout << "\n";
-  }
-
-  psInt N = atoi(problemPath(argv[1]));
+  psInt N = atoi(argv[1]);
 
   //--- create random arrays ---//
+  std::random_device random_device;
+  std::mt19937 random_engine(random_device());
+  std::uniform_int_distribution<int> distribution(0,100);
+
+  std::vector<float_type> A, B, C;
+  A.resize(N);
+  B.resize(N);
+  C.resize(N);
+
+  for (int i = 0; i < N; i++) {
+    A[i] = distribution(random_engine);
+    B[i] = distribution(random_engine);
+    C[i] = distribution(random_engine);
+  }
 
   //--- functional test ---//
+  porescale::axpy((float_type)1.0, A, B);
+  naiveAxpy((float_type)1.0, A, C);
 
+  float_type axpyError = 0.0;
+  for (int i = 0; i < N; i++) {
+    axpyError = abs(B[i] - C[i]);
+    if (axpyError > errTol) std::cout << "Error exceeds tolerance on element " << i << ". Expected " << C[i] << " but got " << B[i] << ".\n";
+  }
 
   //--- performance test ---//
   //--- porescale::axpy ---//
@@ -58,6 +74,7 @@ main( int argc, const char* argv[] )
 
 
     double ps_axpy_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - rebegin).count();
+    double ps_axpy_min_time;
     if (i == 0) ps_axpy_min_time = ps_axpy_time;
     else if (ps_axpy_min_time > ps_axpy_time) ps_axpy_min_time = ps_axpy_time;
   }
