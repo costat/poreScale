@@ -5,13 +5,11 @@
    Some example problem folders are included at examples/geometries.
 */
 
-#include "../util/printDeviceProp.hpp"
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
 #include <chrono>
 #include <ctime>
-#include "cuda.h"
 
 #include "porescale.hpp"
 
@@ -21,21 +19,6 @@ int
 main( int argc, const char* argv[] )
 {
 
-
-  cudaSetDevice(0);
-
-  int devCount;
-  cudaGetDeviceCount(&devCount);
-
-  std::cout << "There are " << devCount << " CUDA devices.\n";
-
-  for (int i = 0; i < devCount; ++i) {
-    std::cout << "------------ Device " << i << " ------------\n";
-    cudaDeviceProp devProp;
-    cudaGetDeviceProperties(&devProp, i);
-    printDevProp(devProp);
-    std::cout << "\n";
-  }
 
   auto begin = std::chrono::high_resolution_clock::now();
 
