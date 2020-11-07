@@ -50,7 +50,7 @@ main( int argc, const char* argv[] )
   A.resize(N);
 
   for (int i = 0; i < N; i++) {
-    A[i] = distribution(random_engine);
+    A[i] = distribution(random_engine) % 100;
   }
 
   float_type result = 0.0;
@@ -68,6 +68,7 @@ main( int argc, const char* argv[] )
   double naive_norm_min_time, naive_norm_time, naive_average_time;
   ps_average_time = 0.0;
   naive_average_time = 0.0;
+
   // Warmup
   porescale::norm(A, result);
   for (int i = 0; i < NITERS; i++) {
