@@ -11,6 +11,9 @@
 #include "types.hpp"
 #include "define.hpp"
 
+#include <execution>
+#include <algorithm>
+
 namespace porescale
 {
 
