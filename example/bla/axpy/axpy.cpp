@@ -23,6 +23,7 @@
 #endif
 
 #define errTol 1e-8
+#define NITERS 100
 
 void
 naiveAxpy(float_type alpha, std::vector<float_type>& A, std::vector<float_type>& B)
@@ -51,7 +52,7 @@ main( int argc, const char* argv[] )
   for (int i = 0; i < N; i++) {
     A[i] = distribution(random_engine);
     B[i] = distribution(random_engine);
-    C[i] = distribution(random_engine);
+    C[i] = B[i];
   }
 
   float_type alpha = 1.0;
@@ -67,23 +68,40 @@ main( int argc, const char* argv[] )
   }
 
   //--- performance test ---//
-  //--- porescale::axpy ---//
-  for (int i = 0; i < 100; i++) {
+  double ps_axpy_min_time, ps_axpy_time, ps_average_time;
+  double naive_axpy_min_time, naive_axpy_time, naive_average_time;
+  ps_average_time = 0.0;
+  naive_average_time = 0.0;
+  // Warmup
+  porescale::axpy(alpha, A, B);
+  for (int i = 0; i < NITERS; i++) {
     auto rebegin = std::chrono::high_resolution_clock::now();
 
     // porescale::axpy
-
-
-    double ps_axpy_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - rebegin).count();
-    double ps_axpy_min_time;
+    porescale::axpy(alpha, A, B);
+    ps_axpy_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - rebegin).count();
+    ps_average_time += ps_axpy_time;
     if (i == 0) ps_axpy_min_time = ps_axpy_time;
     else if (ps_axpy_min_time > ps_axpy_time) ps_axpy_min_time = ps_axpy_time;
   }
-  //--- cublas ---//
+  ps_average_time /= NITERS; 
 
-  //--- reference ---//
+  // Warmup
+  naiveAxpy(alpha, A, B);
+  for (int i = 0; i < NITERS; i++) {
+    auto rebegin = std::chrono::high_resolution_clock::now();
+
+    // naive axpy
+    naiveAxpy(alpha, A, B);
+    naive_axpy_time = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - rebegin).count();
+    naive_average_time += naive_axpy_time;
+    if (i == 0) naive_axpy_min_time = naive_axpy_time;
+    else if (naive_axpy_min_time > naive_axpy_time) naive_axpy_min_time = naive_axpy_time;
+  }
+  naive_average_time /= NITERS;
 
   // print timings
   std::cout << "\n\n//------------------ Finished! Performance reports ------------------//\n";
-
+  std::cout << "porescale::axpy min time = " << ps_axpy_min_time << " average time = " << ps_average_time << ".\n";
+  std::cout << "naive axpy min time = " << naive_axpy_min_time << " average time = " << naive_average_time << ".\n";
 }
