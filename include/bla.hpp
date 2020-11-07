@@ -7,6 +7,9 @@
 #include "define.hpp"
 
 #include <iostream>
+#include <execution>
+#include <algorithm>
+#include <numeric>
 
 namespace porescale {
 
