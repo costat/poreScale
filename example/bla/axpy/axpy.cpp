@@ -50,8 +50,8 @@ main( int argc, const char* argv[] )
   C.resize(N);
 
   for (int i = 0; i < N; i++) {
-    A[i] = distribution(random_engine);
-    B[i] = distribution(random_engine);
+    A[i] = distribution(random_engine) % 100;
+    B[i] = distribution(random_engine) % 100;
     C[i] = B[i];
   }
 
