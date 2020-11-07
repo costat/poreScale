@@ -11,7 +11,22 @@ INCLUDE_DIRECTORIES(${PORESCALE_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 ### FLAGS AND EXAMPLE SOURCES ###
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 --c++17 -stdpar -lrt -Mcudalib -lcuda -lcudart")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+    set(CMAKE_CXX_FLAGS "-std=c++17 -O3 -Wall")
+    set(CMAKE_EXE_LINKER_FLAGS "-ltbb")
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
+    set(CMAKE_CXX_FLAGS "-std=c++17 -O3 -Wall -Wextra -Wpedantic")
+    set(CMAKE_EXE_LINKER_FLAGS "-ltbb")
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL Intel)
+    set(CMAKE_CXX_FLAGS "-std=c++17 -ipo -O3 -xHOST -Wall")
+    set(CMAKE_EXE_LINKER_FLAGS "-ltbb")
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL PGI) # nvc++ is based on the PGI compiler
+	set(CMAKE_CXX_FLAGS "-stdpar -O3 -Wall -std=c++17")
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    set(CMAKE_CXX_FLAGS "/Ox /Ot /GS- /GL /std:c++latest")
+else()
+    message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER_ID} is unknown.")
+endif()
 
 SET(EXECUTABLE_SRCS ./parameters.cpp)
 
