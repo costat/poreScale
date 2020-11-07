@@ -28,7 +28,22 @@
 void
 naiveSparseMatvec(float_type alpha, porescale::sparseMatrix<float_type>& A, std::vector<float_type>& B, float_type beta, std::vector<float_type>& C)
 {
+  int i, row;
+  for (i = 0; i < (int)C.size(); i++) C[i] *= beta;
 
+  if (A.sparseFormat() == porescale::COO)
+    for (i = 0; i < A.nnz(); i++)
+      C[A.row(i)] += alpha * A.value(i) * B[A.column(i)];
+  else if (A.sparseFormat() == porescale::CSR)
+  {
+    row = 0;
+    for (i = 0; i < A.nnz(); i++)
+    {
+      if (i == A.row(row+1)) row++;
+      C[row] += alpha * A.value(i) * B[A.column(i)];
+    }
+  }  
+  return;
 }
 
 int
@@ -39,6 +54,8 @@ main( int argc, const char* argv[] )
   std::string matrixPath(argv[1]);
   porescale::sparseMatrix<float_type> A; 
   A.readMTX(matrixPath);
+
+  std::cout << A.rows() << " " << A.columns() << " " << A.nnz() << "\n";
 
   //--- create random vectors ---//
   psInt N = A.rows();
@@ -58,7 +75,7 @@ main( int argc, const char* argv[] )
   }
 
   float_type alpha = 1.0;
-  float_type beta = 0.0;
+  float_type beta = 1.0;
 
   //--- functional test ---//
   porescale::sparseMatvec(alpha, A, X, beta, Y);
