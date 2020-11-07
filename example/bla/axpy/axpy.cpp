@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <chrono>
 #include <ctime>
-#include "cuda.h"
 
 #include "porescale.hpp"
 
@@ -55,9 +54,11 @@ main( int argc, const char* argv[] )
     C[i] = distribution(random_engine);
   }
 
+  float_type alpha = 1.0;
+
   //--- functional test ---//
-  porescale::axpy((float_type)1.0, A, B);
-  naiveAxpy((float_type)1.0, A, C);
+  porescale::axpy(alpha, A, B);
+  naiveAxpy(alpha, A, C);
 
   float_type axpyError = 0.0;
   for (int i = 0; i < N; i++) {
