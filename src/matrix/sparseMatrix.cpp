@@ -81,6 +81,18 @@ template <typename T>
 T *
 porescale::sparseMatrix<T>::valueArray(void) { return valueArray_.data(); }
 
+template <typename T>
+psInt&
+porescale::sparseMatrix<T>::column(const int idx) { return colArray_[idx]; }
+
+template <typename T>
+psInt&
+porescale::sparseMatrix<T>::row(const int idx) { return rowArray_[idx]; }
+
+template <typename T>
+T&
+porescale::sparseMatrix<T>::value(const int idx) { return valueArray_[idx]; }
+
 //--- Sets ---//
 template <typename T>
 void
@@ -162,6 +174,8 @@ porescale::sparseMatrix<T>::readMTX(
 
     // grab dimension
     matIn >> tmpRows_ >> tmpCols_ >> tmpEntries_;
+
+    std::cout << tmpRows_ << " " << tmpCols_ << " " << tmpEntries_ << "\n";
     this->setRows(tmpRows_);
     this->setColumns(tmpCols_);
     this->setNnz(tmpEntries_);
@@ -178,7 +192,7 @@ porescale::sparseMatrix<T>::readMTX(
     }
     matIn.close();
 
-   // Sort COO
+    // Sort COO
     sortCOO();
 
     return;

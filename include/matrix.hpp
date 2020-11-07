@@ -106,6 +106,13 @@ public:
     /** \brief Pointer to value array. */
     T * valueArray(void);
 
+    /** \brief Access element idx of column array. */
+    psInt& column(const int idx);
+    /** \brief Access element idx of row array. */
+    psInt& row(const int idx);
+    /** \brief Access element idx of value array. */
+    T& value(const int idx);
+
     // Sets
     /** \brief Set the number of nonzeros. */
     void          setNnz(psInt nnzIn);
