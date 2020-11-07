@@ -56,6 +56,11 @@ porescale::sparseMatvec(
 )
 {
 
+    std::for_each(
+        std::execution::par_unseq, C.begin(), C.end(),
+	[&](T Ai) { Ai *= beta; }
+    );
+
     // Check matrix format
     if (A.sparseFormat() == porescale::COO) {
 
